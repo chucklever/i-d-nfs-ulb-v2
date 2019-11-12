@@ -1,0 +1,1071 @@
+<?xml version='1.0' encoding='US-ASCII'?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?xml-stylesheet type="text/xsl" href="rfc2629.xslt" ?>
+<?rfc strict="yes"?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="2"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+
+<rfc
+ category="std"
+ docName="draft-ietf-nfsv4-nfs-ulb-v2-latest"
+ ipr="pre5378Trust200902"
+ submissionType="IETF"
+ xml:lang="en">
+
+<front>
+
+<title
+ abbrev="NFS on RPC-Over-RDMA V2">
+Network File System (NFS) Upper Layer Binding To RPC-Over-RDMA Version 2
+</title>
+
+<author initials="C.L." surname="Lever" fullname="Charles Lever">
+<organization abbrev="Oracle">Oracle Corporation</organization>
+<address>
+<postal>
+<street></street>
+<city></city>
+<region></region>
+<code></code>
+<country>United States of America</country>
+</postal>
+<email>chuck.lever@oracle.com</email>
+</address>
+</author>
+
+<area>Transport</area>
+<workgroup>Network File System Version 4</workgroup>
+<keyword>NFS-Over-RDMA</keyword>
+
+<abstract>
+<t>
+This document specifies Upper Layer Bindings of Network File System (NFS) protocol versions to RPC-over-RDMA version 2.
+</t>
+</abstract>
+
+</front>
+
+<middle>
+<section
+ anchor="section:c413637f-81df-4317-8260-c8e714fad15a"
+ title="Introduction">
+ <t>
+The RPC-over-RDMA version 2 transport may
+employ direct data placement to convey data payloads
+associated with RPC transactions
+<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>.
+To enable successful interoperation,
+RPC client and server implementations
+using RPC-over-RDMA version 2 must agree
+which XDR data items
+and
+RPC procedures
+are eligible to use direct data placement (DDP).
+</t>
+<t>
+An Upper Layer Binding specifies this agreement
+for one or more versions of one RPC program.
+Other operational details, such as
+RPC binding assignments,
+pairing Write chunks with result data items,
+and reply size estimation,
+are also specified by this Binding.
+</t>
+<t>
+This document contains material required of Upper Layer Bindings,
+as specified in
+<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>,
+for the following NFS protocol versions:
+<list style="symbols">
+<t>
+NFS version 2
+<xref target="RFC1094"/>
+</t>
+<t>
+NFS version 3
+<xref target="RFC1813"/>
+</t>
+<t>
+NFS version 4.0
+<xref target="RFC7530"/>
+</t>
+<t>
+NFS version 4.1
+<xref target="RFC5661"/>
+</t>
+<t>
+NFS version 4.2
+<xref target="RFC7862"/>
+</t>
+</list>
+Upper Layer Bindings are also provided for auxiliary protocols
+used with NFS versions 2 and 3 (see
+<xref target="section:7b54a233-c51f-417c-9d4e-1702c03bb30f"/>).
+</t>
+<t>
+This document assumes the reader is already familiar
+with concepts and terminology defined in
+<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>
+and the documents it references.
+</t>
+</section>
+
+<section
+ anchor="section:6a4f8e4c-e3ed-4035-ace7-0d7ab0c4e183"
+ title="Requirements Language">
+<t>
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL"
+in this document are to be interpreted as described in BCP 14
+<xref target="RFC2119"/>
+<xref target="RFC8174"/>
+when, and only when, they appear in all capitals, as shown here.
+</t>
+</section>
+
+<section
+ anchor="section:28d1ea71-26b6-4d20-b855-6d671f579598"
+ title="Reply Size Estimation">
+<t>
+During the construction of each RPC Call message,
+a Requester is responsible for allocating appropriate resources
+for receiving the corresponding Reply message.
+If the Requester expects the RPC Reply message
+will be larger than its inline threshold,
+it provides Write and/or Reply chunks
+wherein the Responder can place results and the reply's Payload stream.
+</t>
+<t>
+A reply resource overrun occurs if the RPC Reply Payload stream
+does not fit into the provided Reply chunk,
+or no Reply chunk was provided and the Payload stream does not fit inline.
+This prevents the Responder from returning the Upper Layer reply to the Requester.
+Therefore reliable reply size estimation is necessary
+to ensure successful interoperation.
+</t>
+<t>
+In most cases, the NFS protocol's XDR definition provides enough information
+to enable an NFS client to predict the maximum size of the expected Reply message.
+If there are variable-size data items in the result,
+the maximum size of the RPC Reply message can be estimated as follows:
+<list style="symbols">
+<t>
+The client requests only a specific portion of an object
+(for example, using the "count" and "offset" fields in an NFS READ).
+</t>
+<t>
+The client limits the number of results
+(e.g. using the "count" field of an NFS READDIR request).
+</t>
+<t>
+The client has already cached the size of the whole object
+it is about to request
+(say, via a previous NFS GETATTR request).
+</t>
+<t>
+The client and server have negotiated a maximum size
+for all calls and responses
+(using a CREATE_SESSION operation, for instance).
+</t>
+</list>
+</t>
+
+<section
+ anchor="section:17125153-8b9a-413e-8a29-e418ff80a096"
+ title="Short Reply Chunk Retry">
+<t>
+In a few cases, either the size of one or more returned data items
+or the number of returned data items
+cannot be known in advance of forming an RPC Call.
+</t>
+<t>
+If an NFS server finds that the NFS client
+provided inadequate receive resources to return the whole reply,
+it returns an RPC level error or a transport error,
+such as ERR_CHUNK.
+</t>
+<t>
+In response to these errors, an NFS client can choose to:
+<list style="symbols">
+<t>
+Terminate the RPC transaction immediately with an error, or
+</t>
+<t>
+Allocate a larger Reply chunk and send the same request as a new RPC transaction
+(a new XID should be assigned to the retransmitted request
+to avoid matching a cached RPC Reply that caches the original error).
+The NFS client should avoid retrying the request indefinitely
+because a Responder may return ERR_CHUNK for a variety of reasons.
+</t>
+</list>
+Subsequent sections of this document discuss exactly
+which operations might have ultimate difficulty with Reply size estimation.
+These operations are eligible for "short Reply chunk retry."
+Unless explicitly mentioned as applicable,
+short Reply chunk retry should not be used
+since accurate reply size estimation is problematic
+in only a few cases.
+In all other cases reply size underestimation is considered a correctable implementation bug.
+</t>
+<t>
+NFS server implementations can avoid connection loss
+by first confirming that target RDMA segments
+are large enough to receive results before initiating explicit RDMA operations.
+</t>
+</section>
+
+</section>
+
+<section
+ anchor="section:9cfda6eb-2271-4e71-8389-61d14e05fff0"
+ title="Upper Layer Binding for NFS Versions 2 and 3">
+<t>
+The Upper Layer Binding specification in this section
+applies to NFS version 2
+<xref target="RFC1094"/>
+and
+NFS version 3
+<xref target="RFC1813"/>.
+For brevity, in this document a "Legacy NFS client"
+refers to an NFS client using version 2 or version 3
+of the NFS RPC program (100003) to communicate with an NFS server.
+Likewise, a "Legacy NFS server" is an NFS server
+communicating with clients using NFS version 2 or NFS version 3.
+</t>
+<t>
+The following XDR data items in NFS versions 2 and 3 are DDP-eligible:
+<list style="symbols">
+<t>
+The opaque file data argument in the NFS WRITE procedure
+</t>
+<t>
+The pathname argument in the NFS SYMLINK procedure
+</t>
+<t>
+The opaque file data result in the NFS READ procedure
+</t>
+<t>
+The pathname result in the NFS READLINK procedure
+</t>
+</list>
+All other argument or result data items in NFS versions 2 and 3 are not DDP-eligible.
+</t>
+<t>
+A transport error does not give an indication of
+whether the server has processed the arguments of the RPC Call,
+or whether the server has accessed or modified client memory associated with that RPC.
+</t>
+
+<section
+ anchor="section:99C913E0-25D7-495B-834A-F5A46EEDC9F8"
+ title="Reply Size Estimation">
+<t>
+A Legacy NFS client determines the maximum reply size
+for each operation using the criteria outlined in
+<xref target="section:28d1ea71-26b6-4d20-b855-6d671f579598"/>.
+There are no operations in NFS version 2 or 3 that benefit from short Reply chunk retry.
+</t>
+</section>
+
+<section
+ anchor="section:cd88140e-916e-4b36-94e1-f0db878c129c"
+ title="RPC Binding Considerations">
+<t>
+Legacy NFS servers traditionally
+listen for clients on UDP and TCP port 2049.
+Additionally, they register these ports with a local portmapper service
+<xref target="RFC1833"/>.
+</t>
+<t>
+A Legacy NFS server supporting RPC-over-RDMA version 2
+on such a network and registering itself with the RPC portmapper MAY choose an arbitrary port,
+or
+MAY use the alternative well-known port number for its RPC-over-RDMA service
+(see
+<xref target="section:be1fa29f-aab2-4074-80a4-b9fe244fd236"/>).
+The chosen port MAY be registered with the RPC portmapper
+using the netids assigned in
+<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>.
+</t>
+</section>
+
+</section>
+
+<section
+ anchor="section:7b54a233-c51f-417c-9d4e-1702c03bb30f"
+ title="Upper Layer Bindings for NFS Version 2 and 3 Auxiliary Protocols">
+<t>
+NFS versions 2 and 3 are typically deployed with several other protocols,
+sometimes referred to as "NFS auxiliary protocols."
+These are distinct RPC programs that define procedures
+which are not part of the NFS RPC program (100003).
+The Upper Layer Bindings in this section apply to:
+<list style="symbols">
+<t>
+Versions 2 and 3 of the MOUNT RPC program (100005)
+<xref target="RFC1813"/>
+</t>
+<t>
+Versions 1, 3, and 4 of the NLM RPC program (100021)
+<xref target="RFC1813"/>
+</t>
+<t>
+Version 1 of the NSM RPC program (100024),
+described in Chapter 11 of
+<xref target="XNFS"/>
+</t>
+<t>
+Version 1 of the NFSACL RPC program (100227),
+which does not have a public definition.
+NFSACL is treated in this document as a de facto standard,
+as there are several interoperating implementations.
+</t>
+</list>
+</t>
+
+<section
+ anchor="section:3ec1a4db-ce39-4540-a58b-f488f0fd1014"
+ title="MOUNT, NLM, and NSM Protocols">
+<t>
+Historically, NFS/RDMA implementations have chosen to convey
+the MOUNT, NLM, and NSM protocols via TCP.
+To enable interoperation of these protocols when NFS/RDMA is in use,
+a legacy NFS server MUST provide support for these protocols via TCP.
+</t>
+</section>
+
+<section
+ anchor="section:09fe0fee-fcaa-497e-b986-60fed800f3b4"
+ title="NFSACL Protocol">
+<t>
+Legacy clients and servers that support the NFSACL RPC program
+typically convey NFSACL procedures
+on the same connection as the NFS RPC program (100003).
+This obviates the need for separate rpcbind queries
+to discover server support for this RPC program.
+</t>
+<t>
+ACLs are typically small,
+but even large ACLs must be encoded and decoded to some degree.
+Thus no data item in this Upper Layer Protocol is DDP-eligible.
+</t>
+<t>
+For procedures whose replies do not include an ACL object,
+the size of a reply is determined directly from the NFSACL RPC program's XDR definition.
+</t>
+<t>
+There is no protocol-specified size limit for NFS version 3 ACLs,
+and there is no mechanism in either the NFSACL or NFS RPC programs
+for a Legacy client to ascertain the largest ACL a Legacy server can return.
+Legacy client implementations should choose a maximum size
+for ACLs based on their own internal limits.
+</t>
+<t>
+Because an NFSACL client cannot know in advance how large a returned ACL will be,
+it can use short Reply chunk retry
+when an NFSACL GETACL operation encounters a transport error.
+</t>
+</section>
+
+</section>
+
+<section
+ anchor="section:f043da72-3f31-42f4-afbb-c96ab5c2f757"
+ title="Upper Layer Binding For NFS Version 4">
+<t>
+The Upper Layer Binding specification in this section
+applies to versions of the NFS RPC program
+defined in NFS version 4.0
+<xref target="RFC7530"/>
+NFS version 4.1
+<xref target="RFC5661"/>
+and
+NFS version 4.2
+<xref target="RFC7862"/>
+</t>
+
+<section
+ anchor="section:85C8DB1E-F39D-425F-BB0B-44B0396FB5EB"
+ title="DDP-Eligibility">
+<t>
+Only the following XDR data items in the COMPOUND procedure
+of all NFS version 4 minor versions are DDP-eligible:
+<list style="symbols">
+<t>
+The opaque data field in the WRITE4args structure
+</t>
+<t>
+The linkdata field of the NF4LNK arm in the createtype4 union
+</t>
+<t>
+The opaque data field in the READ4resok structure
+</t>
+<t>
+The linkdata field in the READLINK4resok structure
+</t>
+</list>
+</t>
+</section>
+
+<section
+ anchor="section:7f4bb04b-aace-4881-82da-a4e85604b384"
+ title="Reply Size Estimation">
+<t>
+Within NFS version 4, there are certain variable-length result data items
+whose maximum size cannot be estimated by clients reliably
+because there is no protocol-specified size limit on these result arrays.
+These include:
+<list style="symbols">
+<t>
+The attrlist4 field
+</t>
+<t>
+Fields containing ACLs such as
+fattr4_acl,
+fattr4_dacl,
+and
+fattr4_sacl
+</t>
+<t>
+Fields in the fs_locations4 and fs_locations_info4 data structures
+</t>
+<t>
+Fields opaque to the NFS version 4 protocol
+which pertain to pNFS layout metadata,
+such as
+loc_body,
+loh_body,
+da_addr_body,
+lou_body,
+lrf_body,
+fattr_layout_types,
+and
+fs_layout_types
+</t>
+</list>
+</t>
+
+<section
+ anchor="section:f8c4e904-1294-4d04-b4f2-8d702f67c067"
+ title="Reply Size Estimation for Minor Version 0">
+<t>
+The NFS version 4.0 protocol itself
+does not impose any bound on the size of NFS calls or responses.
+</t>
+<t>
+Some of the data items enumerated in
+<xref target="section:7f4bb04b-aace-4881-82da-a4e85604b384"/>
+(in particular, the items related to ACLs and fs_locations)
+make it difficult to predict the maximum size of NFS version 4.0 replies
+that interrogate variable-length fattr4 attributes.
+Client implementations might rely on their own internal architectural limits
+to constrain the reply size,
+but such limits are not always guaranteed to be reliable.
+</t>
+<t>
+When an especially large fattr4 result is expected,
+a Reply chunk might be required.
+An NFS version 4.0 client can use short Reply chunk retry
+when an NFS COMPOUND containing a GETATTR operation
+encounters a transport error.
+</t>
+<t>
+The use of NFS COMPOUND operations raises the possibility
+of requests that combine a non-idempotent operation
+(e.g. RENAME)
+with a GETATTR operation that requests
+one or more variable-length results.
+This combination should be avoided
+by ensuring that any GETATTR operation
+that requests a result of unpredictable length
+is sent in an NFS COMPOUND by itself.
+</t>
+</section>
+
+<section
+ anchor="section:ccfe3446-9d80-4e91-a79c-acc8f69714b8"
+ title="Reply Size Estimation for Minor Version 1 and Newer">
+<t>
+In NFS version 4.1 and newer minor versions,
+the csa_fore_chan_attrs argument of the CREATE_SESSION operation
+contains a ca_maxresponsesize field.
+The value in this field can be taken
+as the absolute maximum size of replies
+generated by an NFS version 4.1 server.
+</t>
+<t>
+This value can be used in cases where it is not possible
+to estimate a reply size upper bound precisely.
+In practice, objects such as
+ACLs,
+named attributes,
+layout bodies,
+and
+security labels
+are much smaller than this maximum.
+</t>
+</section>
+
+</section>
+
+<section
+ anchor="section:708a494c-a198-4f6d-be44-08093528cba7"
+ title="RPC Binding Considerations" toc="default">
+<t>
+NFS version 4 servers are required to listen on TCP port 2049,
+and they are not required to register with an rpcbind service
+<xref target="RFC7530"/>
+</t>
+<t>
+Therefore, an NFS version 4 server supporting RPC-over-RDMA version 2
+MUST use the alternative well-known port number
+for its RPC-over-RDMA service (see
+<xref target="section:be1fa29f-aab2-4074-80a4-b9fe244fd236"/>
+Clients SHOULD connect to this well-known port
+without consulting the RPC portmapper (as for NFS version 4 on TCP transports).
+</t>
+</section>
+
+<section
+ anchor="section:73adbc16-54dd-42ee-b44e-a75c13c69edC"
+ title="NFS COMPOUND Requests">
+
+<section
+ anchor="section:c74506c6-485a-419c-91f8-62df6c61d6b4"
+ title="Multiple DDP-eligible Data Items">
+<t>
+An NFS version 4 COMPOUND procedure can contain more than one operation
+that carries a DDP-eligible data item.
+An NFS version 4 client provides XDR Position values
+in each Read chunk to disambiguate which chunk
+is associated with which argument data item.
+However NFS version 4 server and client implementations must agree in advance
+on how to pair Write chunks with returned result data items.
+</t>
+<t>
+In the following list, a "READ operation" refers to any NFS version 4 operation
+which has a DDP-eligible result data item.
+The mechanism specified in Section 4.3.2 of
+<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>
+is applied to this class of operations:
+<list style="symbols">
+<t>
+If an NFS version 4 client wishes all DDP-eligible items
+in an NFS reply to be conveyed inline,
+it leaves the Write list empty.
+</t>
+<t>
+The first chunk in the Write list MUST be used
+by the first READ operation in an NFS version 4 COMPOUND procedure.
+The next Write chunk is used by the next READ operation, and so on.
+</t>
+<t>
+If an NFS version 4 client has provided a matching non-empty Write chunk,
+then the corresponding READ operation MUST return its DDP-eligible data item
+using that chunk.
+</t>
+<t>
+If an NFS version 4 client has provided an empty matching Write chunk,
+then the corresponding READ operation MUST return all of its result data items inline.
+</t>
+<t>
+If a READ operation returns a union arm which does not contain a DDP-eligible result,
+and the NFS version 4 client has provided a matching non-empty Write chunk,
+an NFS version 4 server MUST return an empty Write chunk in that Write list position.
+</t>
+<t>
+If there are more READ operations than Write chunks,
+then remaining NFS Read operations in an NFS version 4 COMPOUND
+that have no matching Write chunk MUST return their results inline.
+</t>
+</list>
+</t>
+</section>
+
+<section
+ anchor="section:fefc0c22-7dc9-4ced-82cf-947a35fab87f"
+ title="Chunk List Complexity">
+<t>
+The RPC-over-RDMA version 2 protocol does not place any limit
+on the number of chunks or segments that may appear in Read or Write lists.
+However, for various reasons NFS version 4 server implementations
+often have practical limits on the number of chunks or segments
+they are prepared to process in a single RPC transaction
+conveyed via RPC-over-RDMA version 2.
+</t>
+<t>
+These implementation limits are especially important
+when Kerberos integrity or privacy is in use
+<xref target="RFC7861"/>.
+GSS services increase the size of credential material in RPC headers,
+potentially requiring the use of Long messages.
+This can increase the complexity of chunk lists
+independent of the NFS version 4 COMPOUND being conveyed.
+</t>
+<t>
+In the absence of explicit knowledge of the server's limits,
+NFS version 4 clients SHOULD follow the prescriptions listed below
+when constructing RPC-over-RDMA version 2 messages.
+NFS version 4 servers MUST accept and process such requests.
+<list style="symbols">
+<t>
+The Read list can contain either
+a Position-Zero Read chunk,
+one Read chunk with a non-zero Position,
+or
+both.
+</t>
+<t>
+The Write list can contain no more than one Write chunk.
+</t>
+<t>
+Any chunk can contain up to sixteen RDMA segments.
+</t>
+</list>
+</t>
+<t>
+NFS version 4 clients wishing to send more complex chunk lists
+can provide configuration interfaces to
+bound the complexity of NFS version 4 COMPOUNDs,
+limit the number of elements in scatter-gather operations,
+and
+avoid other sources of chunk overruns at the receiving peer.
+</t>
+<t>
+An NFS version 4 server SHOULD return one of the following responses
+to a client that has sent an RPC transaction
+via RPC-over-RDMA version 2 which cannot be processed
+due to chunk list complexity limits on the server:
+<list style="symbols">
+<t>
+A problem is detected by the transport layer
+while parsing the transport header in an RPC Call message.
+The server responds with an RDMA_ERROR message with the err
+field set to ERR_CHUNK.
+</t>
+<t>
+A problem is detected during XDR decoding of the RPC Call message
+while the RPC layer reassembles the call's XDR stream.
+The server responds with an RPC reply with its "reply_stat" field
+set to MSG_ACCEPTED and its "accept_stat" field set to GARBAGE_ARGS.
+</t>
+</list>
+</t>
+<t>
+After receiving one of these errors,
+an NFS version 4 client SHOULD NOT retransmit the failing request,
+as the result would be the same error.
+It SHOULD immediately terminate the RPC transaction
+associated with the XID in the reply.
+</t>
+</section>
+
+<section
+ anchor="section:213bbc39-b595-4d52-a0ea-a1d1b97dd8a4"
+ title="NFS Version 4 COMPOUND Example">
+<t>
+The following example shows a Write list with three Write chunks, A, B, and C.
+The NFS version 4 server consumes the provided Write chunks
+by writing the results of the designated operations
+in the compound request (READ and READLINK) back to each chunk.
+</t>
+<figure align="left">
+<artwork xml:space="preserve" align="left">
+
+   Write list:
+
+      A --&gt; B --&gt; C
+
+   NFS version 4 COMPOUND request:
+
+      PUTFH LOOKUP READ PUTFH LOOKUP READLINK PUTFH LOOKUP READ
+                    |                   |                   |
+                    v                   v                   v
+                    A                   B                   C
+
+</artwork>
+</figure>
+<t>
+If the NFS version 4 client does not want to have the READLINK result
+returned via RDMA, it provides an empty Write chunk for buffer B
+to indicate that the READLINK result must be returned inline.
+</t>
+</section>
+
+</section>
+
+<section
+ anchor="section:7f7ee001-7a3a-47a6-9eff-34107bc0f718"
+ title="NFS Callback Requests">
+<t>
+The NFS version 4 family of protocols support server-initiated callbacks
+to notify NFS version 4 clients of events such as recalled delegations.
+</t>
+
+<section
+ anchor="section:071d9296-95ff-45e6-aad4-76d67cc0c84b"
+title="NFS Version 4.0 Callback">
+<t>
+NFS version 4.0 implementations typically employ
+a separate TCP connection to handle callback operations,
+even when the forward channel uses an RPC-over-RDMA version 2 transport.
+</t>
+<t>
+No operation in the NFS version 4.0 callback RPC program
+conveys a data payload of significant size.
+Therefore, no XDR data items in this RPC program is DDP-eligible.
+</t>
+<t>
+A CB_RECALL reply is small and fixed in size.
+The CB_GETATTR reply contains a variable-length fattr4 data item.
+See
+<xref target="section:f8c4e904-1294-4d04-b4f2-8d702f67c067"/>
+for a discussion of reply size prediction for this data item.
+</t>
+<t>
+An NFS version 4.0 client advertises netids
+and ad hoc port addresses for contacting its NFS version 4.0 callback service
+using the SETCLIENTID operation.
+</t>
+</section>
+
+<section
+ anchor="section:d1ad2442-35c2-4596-af36-5439b9e1de38"
+ title="NFS Version 4.1 Callback">
+<t>
+In NFS version 4.1 and newer minor versions,
+callback operations may appear on the same connection
+as is used for NFS version 4 forward channel client requests.
+NFS version 4 clients and servers MUST use the approach described in
+<xref target="RFC8167"/>
+when backchannel operations are conveyed on RPC-over-RDMA version 2 transports.
+</t>
+<t>
+The csa_back_chan_attrs argument of the CREATE_SESSION operation
+contains a ca_maxresponsesize field.
+The value in this field can be taken as the absolute maximum size
+of backchannel replies generated by a replying NFS version 4 client.
+</t>
+<t>
+There are no DDP-eligible data items in callback procedures
+defined in NFS version 4.1 or NFS version 4.2.
+However, some callback operations,
+such as messages that convey device ID information,
+can be large,
+in which case a Long Call or Reply might be required.
+</t>
+<t>
+When an NFS version 4.1 client can support Long Calls in its backchannel,
+it reports a backchannel ca_maxrequestsize that is larger than the connection's inline thresholds.
+Otherwise an NFS version 4 server MUST use only Short messages to convey backchannel operations.
+</t>
+</section>
+
+</section>
+
+<section
+ anchor="section:d5f39163-97ce-46f4-a459-f38576827402"
+ title="Session-Related Considerations">
+<t>
+The presence of an NFS session (defined in
+<xref target="RFC5661"/>
+has no effect on the operation of RPC-over-RDMA version 2.
+None of the operations introduced to support NFS sessions
+(e.g. the SEQUENCE operation) contain DDP-eligible data items.
+There is no need to match the number of session slots
+with the number of available RPC-over-RDMA version 2 credits.
+</t>
+<t>
+However, there are a few new cases where an RPC transaction can fail.
+For example, a Requester might receive, in response to an RPC request, an RDMA_ERROR message with an rdma_err value of ERR_CHUNK.  These situations are not different from existing RPC errors which an NFS session implementation is already prepared to handle for other transports.  And as with other transports during such a failure, there might be no SEQUENCE result available to the Requester to distinguish whether failure occurred before or after the requested operations were executed on the Responder.  </t>
+        <t>When a transport error occurs (e.g. RDMA_ERROR), the Requester proceeds as usual to match the incoming XID value to a waiting RPC Call.  The RPC transaction is terminated, and the result status is reported to the Upper Layer Protocol.  The Requester's session implementation then determines the session ID and slot for the failed request, and performs slot recovery to make that slot usable again.  If this were not done, that slot could be rendered permanently unavailable.  </t>
+        <t>When an NFS session is not present (for example, when NFS version 4.0 is in use), a transport error does not provide an indication of whether the server has processed the arguments of the RPC Call, or whether the server has accessed or modified client memory associated with that RPC.  </t>
+      </section>
+
+<section
+ anchor="section:9c56f40e-473d-414d-aaaa-bc265e06efd9"
+ title="Transport Considerations".
+
+<section
+ anchor="section:06e779db-d885-4c15-b1db-bfe2e24df4dd"
+ title="Congestion Avoidance">
+<t>
+Section 3.1 of
+<xref target="RFC7530"/>
+states:
+<list style="empty">
+<t>
+Where an NFS version 4 implementation supports
+operation over the IP network protocol,
+the supported transport layer between NFS and IP MUST be an IETF standardized transport protocol
+that is specified to avoid network congestion;
+such transports include TCP and the Stream Control Transmission Protocol (SCTP).
+</t>
+</list>
+</t>
+<t>
+Section 2.9.1 of
+<xref target="RFC5661"/>
+further states:
+<list style="empty">
+<t>
+Even if NFS version 4.1 is used over a non-IP network protocol,
+it is RECOMMENDED that the transport support congestion control.
+</t>
+<t>
+It is permissible for a connectionless transport to be used
+under NFS version 4.1;
+however, reliable and in-order delivery of data
+combined with congestion control by the connectionless transport is REQUIRED.
+As a consequence,
+UDP by itself MUST NOT be used as an NFS version 4.1 transport.
+</t>
+</list>
+</t>
+<t>
+RPC-over-RDMA version 2 is constructed
+on a platform of RDMA Reliable Connected QP type connections
+<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>
+<xref target="RFC5041"/>.
+RDMA Reliable Connected QPs are reliable, connection-oriented transports
+that guarantee in-order delivery, meeting all above requirements for NFS version 4 transports.
+</t>
+</section>
+
+<section
+ anchor="section:f9c65981-ee1c-4a88-bbf3-bb5d92f85a95"
+ title="Retransmission and Keep-alive">
+<t>
+NFS version 4 client implementations often rely on
+a transport-layer keep-alive mechanism to detect
+when an NFS version 4 server has become unresponsive.
+When an NFS server is no longer responsive,
+client-side keep-alive terminates the connection,
+which in turn triggers reconnection and RPC retransmission.
+</t>
+<t>
+Some RDMA transports (such as the Reliable Connected QP type on InfiniBand)
+have no keep-alive mechanism.
+Without a disconnect or new RPC traffic,
+such connections can remain alive long after an NFS server has become unresponsive.
+Once an NFS client has consumed all available RPC-over-RDMA version 2 credits
+on that transport connection, it will forever await a reply before sending another RPC request.
+</t>
+<t>
+NFS version 4 clients SHOULD reserve one RPC-over-RDMA version 2 credit
+to use for periodic server or connection health assessment.
+This credit can be used to drive an RPC request on an otherwise idle connection,
+triggering either a quick affirmative server response or immediate connection termination.
+</t>
+<t>
+In addition to network partition and request loss scenarios,
+RPC-over-RDMA version 2 transport connections can be terminated
+when a Transport header is malformed,
+Reply messages are larger than receive resources,
+or when too many RPC-over-RDMA messages are sent at once.
+In such cases:
+<list style="symbols">
+<t>
+If there is a transport error indicated
+(ie, RDMA_ERROR) before the disconnect or instead of a disconnect,
+the Requester MUST respond to that error
+as prescribed by the specification of the RPC transport.
+Then the NFS version 4 rules for handling retransmission apply.
+</t>
+<t>
+If there is a transport disconnect and the Responder has provided no other response for a request,
+then only the NFS version 4 rules for handling retransmission apply.
+</t>
+</list>
+</t>
+</section>
+
+</section>
+
+</section>
+
+<section
+ anchor="section:aa393087-28cf-4175-ac8c-a8d45162ac9a"
+ title="Extending NFS Upper Layer Bindings">
+<t>
+RPC programs such as NFS are required to have an Upper Layer Binding specification
+to interoperate on RPC-over-RDMA version 2 transports
+<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>.
+Via standards action, the Upper Layer Binding specified in this document can be extended
+to cover versions of the NFS version 4 protocol specified after NFS version 4 minor version 2,
+or to cover separately published extensions to an existing NFS version 4 minor version,
+as described in
+<xref target="RFC8178"/>.
+</t>
+</section>
+
+<section
+ anchor="section:68faf478-d2de-490f-bf73-193926bb5334"
+ title="Security Considerations">
+<t>
+RPC-over-RDMA version 2 supports all RPC security models,
+including RPCSEC_GSS security and transport-level security
+<xref target="RFC7861"/>.
+The choice of what Direct Data Placement mechanism to convey RPC argument and results
+does not affect this,
+since it changes only the method of data transfer.
+Because the current document defines only the binding of the NFS protocols atop
+<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>,
+all relevant security considerations are therefore to be described at that layer.
+</t>
+</section>
+
+<section
+ anchor="section:be1fa29f-aab2-4074-80a4-b9fe244fd236"
+ title="IANA Considerations">
+<t>
+The use of direct data placement in NFS
+introduces a need for an additional port number assignment
+for networks that share traditional UDP and TCP port spaces with RDMA services.
+The iWARP protocol is such an example
+<xref target="RFC5040"/>
+<xref target="RFC5041"/>.
+</t>
+<t>
+For this purpose, a set of transport protocol port number assignments
+is specified by this document.
+IANA has assigned the following ports for NFS/RDMA in the IANA port registry,
+according to the guidelines described in
+<xref target="RFC6335"/>.
+</t>
+
+<figure align="left">
+<artwork xml:space="preserve" align="left">
+
+  nfsrdma 20049/tcp Network File System (NFS) over RDMA
+  nfsrdma 20049/udp Network File System (NFS) over RDMA
+  nfsrdma 20049/sctp Network File System (NFS) over RDMA
+
+</artwork>
+</figure>
+<t>
+This document should be listed as a reference for the nfsrdma port assignments.
+This document does not alter these assignments.
+</t>
+</section>
+
+</middle>
+
+<back>
+
+<references
+ title="Normative References">
+
+<reference
+ anchor="I-D.cel-nfsv4-rpcrdma-version-two">
+<front>
+<title>RPC-over-RDMA Version 2 Protocol</title>
+<author initials="C" surname="Lever" fullname="Chuck Lever">
+<organization />
+</author>
+<author initials="D" surname="Noveck" fullname="David Noveck">
+<organization />
+</author>
+<date month="May" day="6" year="2019"/>
+<abstract>
+<t>
+This document specifies a new version of the transport protocol
+that conveys Remote Procedure Call (RPC) messages on physical
+transports capable of Remote Direct Memory Access (RDMA).
+The new version of this protocol is extensible.
+</t>
+</abstract>
+</front>
+<seriesInfo
+ name="Internet-Draft"
+ value="draft-cel-nfsv4-rpcrdma-version-two-09"/>
+<format
+ type="TXT"
+ target="http://www.ietf.org/internet-drafts/draft-cel-nfsv4-rpcrdma-version-two-09.txt"/>
+</reference>
+
+<?rfc include="reference.RFC.1833.xml"?>
+<?rfc include="reference.RFC.2119.xml"?>
+<?rfc include="reference.RFC.5661.xml"?>
+<?rfc include="reference.RFC.6335.xml"?>
+<?rfc include="reference.RFC.7530.xml"?>
+<?rfc include="reference.RFC.7861.xml"?>
+<?rfc include="reference.RFC.7862.xml"?>
+<?rfc include="reference.RFC.8167.xml"?>
+<?rfc include="reference.RFC.8174.xml"?>
+</references>
+
+<references
+ title="Informative References">
+
+<reference anchor="XNFS">
+<front>
+<title>Protocols for Interworking: XNFS, Version 3W</title>
+<author>
+<organization>The Open Group</organization>
+</author>
+<date month="February" year="1998"/>
+<abstract>
+<t>
+This Technical Standard is aligned with Sun's NFS Version 3,
+and incorporates the Sun WebNFS&#8482; extensions.
+The process of accessing remote files and directories
+as though they were part of the local file system hierarchy
+is commonly known as Transparent File Access (TFA).
+The most widely used heterogeneous TFA architecture
+is the Network File System (NFS),
+originally developed by Sun Microsytems.
+The Open Group XNFS offers a complete solution to transparent file access
+between open system-compliant systems,
+through the XNFS protocols for interoperability,
+and The Open Group XSI interfaces for application/user portability
+(as identified in several XNFS appendixes).
+</t>
+</abstract>
+</front>
+</reference>
+
+<?rfc include="reference.RFC.1094.xml"?>
+<?rfc include="reference.RFC.1813.xml"?>
+<?rfc include="reference.RFC.5040.xml"?>
+<?rfc include="reference.RFC.5041.xml"?>
+<?rfc include="reference.RFC.5666.xml"?>
+<?rfc include="reference.RFC.8178.xml"?>
+
+</references>
+
+<section
+ anchor="section:bdd68652-17c8-4e5f-92c4-775703e3d829"
+ numbered="no"
+ title="Acknowledgments">
+<t>
+Thanks to Tom Talpey, who contributed the text of
+<xref target="section:fefc0c22-7dc9-4ced-82cf-947a35fab87f"/>.
+Dave Noveck contributed the text of
+<xref target="section:d5f39163-97ce-46f4-a459-f38576827402"/>
+and
+<xref target="section:aa393087-28cf-4175-ac8c-a8d45162ac9a"/>.
+</t>
+<t>Special thanks go to
+Transport Area Director Magnus Westerlund,
+NFSV4 Working Group Chairs
+Spencer Shepler
+and
+Brian Pawlowski,
+and
+NFSV4 Working Group Secretary Thomas Haynes for their support.
+The author also wishes to thank
+Bill Baker
+and
+Greg Marsden
+for their support of this work.
+</t>
+</section>
+
+</back>
+
+</rfc>
