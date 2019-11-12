@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='US-ASCII'?>
+<?xml version="1.0" encoding="US-ASCII"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd">
 <?xml-stylesheet type="text/xsl" href="rfc2629.xslt" ?>
 <?rfc strict="yes"?>
@@ -784,10 +784,30 @@ with the number of available RPC-over-RDMA version 2 credits.
 </t>
 <t>
 However, there are a few new cases where an RPC transaction can fail.
-For example, a Requester might receive, in response to an RPC request, an RDMA_ERROR message with an rdma_err value of ERR_CHUNK.  These situations are not different from existing RPC errors which an NFS session implementation is already prepared to handle for other transports.  And as with other transports during such a failure, there might be no SEQUENCE result available to the Requester to distinguish whether failure occurred before or after the requested operations were executed on the Responder.  </t>
-        <t>When a transport error occurs (e.g. RDMA_ERROR), the Requester proceeds as usual to match the incoming XID value to a waiting RPC Call.  The RPC transaction is terminated, and the result status is reported to the Upper Layer Protocol.  The Requester's session implementation then determines the session ID and slot for the failed request, and performs slot recovery to make that slot usable again.  If this were not done, that slot could be rendered permanently unavailable.  </t>
-        <t>When an NFS session is not present (for example, when NFS version 4.0 is in use), a transport error does not provide an indication of whether the server has processed the arguments of the RPC Call, or whether the server has accessed or modified client memory associated with that RPC.  </t>
-      </section>
+For example, a Requester might receive, in response to an RPC request,
+an RDMA_ERROR message with an rdma_err value of ERR_CHUNK.
+These situations are not different from existing RPC errors
+which an NFS session implementation is already prepared to handle for other transports.
+And as with other transports during such a failure,
+there might be no SEQUENCE result available to the Requester
+to distinguish whether failure occurred before or after the requested operations
+were executed on the Responder.
+</t>
+<t>
+When a transport error occurs (e.g. RDMA_ERROR),
+the Requester proceeds as usual to match the incoming XID value to a waiting RPC Call.
+The RPC transaction is terminated, and the result status is reported to the Upper Layer Protocol.
+The Requester's session implementation then determines the session ID and slot for the failed request,
+and performs slot recovery to make that slot usable again.
+If this were not done, that slot could be rendered permanently unavailable.
+</t>
+<t>
+When an NFS session is not present (for example, when NFS version 4.0 is in use),
+a transport error does not provide an indication
+of whether the server has processed the arguments of the RPC Call,
+or whether the server has accessed or modified client memory associated with that RPC.
+</t>
+</section>
 
 <section
  anchor="section:9c56f40e-473d-414d-aaaa-bc265e06efd9"
