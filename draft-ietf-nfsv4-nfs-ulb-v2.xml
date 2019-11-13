@@ -647,7 +647,7 @@ due to chunk list complexity limits on the server:
 <t>
 A problem is detected by the transport layer
 while parsing the transport header in an RPC Call message.
-The server responds with an RDMA_ERROR message with the err
+The server responds with an RDMA2_ERROR message with the err
 field set to ERR_CHUNK.
 </t>
 <t>
@@ -785,7 +785,7 @@ with the number of available RPC-over-RDMA version 2 credits.
 <t>
 However, there are a few new cases where an RPC transaction can fail.
 For example, a Requester might receive, in response to an RPC request,
-an RDMA_ERROR message with an rdma_err value of ERR_CHUNK.
+an RDMA2_ERROR message with an rdma_err value of ERR_CHUNK.
 These situations are not different from existing RPC errors
 which an NFS session implementation is already prepared to handle for other transports.
 And as with other transports during such a failure,
@@ -794,7 +794,7 @@ to distinguish whether failure occurred before or after the requested operations
 were executed on the Responder.
 </t>
 <t>
-When a transport error occurs (e.g. RDMA_ERROR),
+When a transport error occurs (e.g. RDMA2_ERROR),
 the Requester proceeds as usual to match the incoming XID value to a waiting RPC Call.
 The RPC transaction is terminated, and the result status is reported to the Upper Layer Protocol.
 The Requester's session implementation then determines the session ID and slot for the failed request,
@@ -894,7 +894,7 @@ In such cases:
 <list style="symbols">
 <t>
 If there is a transport error indicated
-(ie, RDMA_ERROR) before the disconnect or instead of a disconnect,
+(ie, RDMA2_ERROR) before the disconnect or instead of a disconnect,
 the Requester MUST respond to that error
 as prescribed by the specification of the RPC transport.
 Then the NFS version 4 rules for handling retransmission apply.
