@@ -139,88 +139,9 @@ a Requester is responsible for allocating appropriate resources
 for receiving the corresponding Reply message.
 If the Requester expects the RPC Reply message
 will be larger than its inline threshold,
-it provides Write and/or Reply chunks
+it MAY provide Write and/or Reply chunks
 wherein the Responder can place results and the reply's Payload stream.
 </t>
-<t>
-A reply resource overrun occurs if the RPC Reply Payload stream
-does not fit into the provided Reply chunk,
-or no Reply chunk was provided and the Payload stream does not fit inline.
-This prevents the Responder from returning the Upper Layer reply to the Requester.
-Therefore reliable reply size estimation is necessary
-to ensure successful interoperation.
-</t>
-<t>
-In most cases, the NFS protocol's XDR definition provides enough information
-to enable an NFS client to predict the maximum size of the expected Reply message.
-If there are variable-size data items in the result,
-the maximum size of the RPC Reply message can be estimated as follows:
-<list style="symbols">
-<t>
-The client requests only a specific portion of an object
-(for example, using the "count" and "offset" fields in an NFS READ).
-</t>
-<t>
-The client limits the number of results
-(e.g. using the "count" field of an NFS READDIR request).
-</t>
-<t>
-The client has already cached the size of the whole object
-it is about to request
-(say, via a previous NFS GETATTR request).
-</t>
-<t>
-The client and server have negotiated a maximum size
-for all calls and responses
-(using a CREATE_SESSION operation, for instance).
-</t>
-</list>
-</t>
-
-<section
- anchor="section:17125153-8b9a-413e-8a29-e418ff80a096"
- title="Short Reply Chunk Retry">
-<t>
-In a few cases, either the size of one or more returned data items
-or the number of returned data items
-cannot be known in advance of forming an RPC Call.
-</t>
-<t>
-If an NFS server finds that the NFS client
-provided inadequate receive resources to return the whole reply,
-it returns an RPC level error or a transport error,
-such as ERR_CHUNK.
-</t>
-<t>
-In response to these errors, an NFS client can choose to:
-<list style="symbols">
-<t>
-Terminate the RPC transaction immediately with an error, or
-</t>
-<t>
-Allocate a larger Reply chunk and send the same request as a new RPC transaction
-(a new XID should be assigned to the retransmitted request
-to avoid matching a cached RPC Reply that caches the original error).
-The NFS client should avoid retrying the request indefinitely
-because a Responder may return ERR_CHUNK for a variety of reasons.
-</t>
-</list>
-Subsequent sections of this document discuss exactly
-which operations might have ultimate difficulty with Reply size estimation.
-These operations are eligible for "short Reply chunk retry."
-Unless explicitly mentioned as applicable,
-short Reply chunk retry should not be used
-since accurate reply size estimation is problematic
-in only a few cases.
-In all other cases reply size underestimation is considered a correctable implementation bug.
-</t>
-<t>
-NFS server implementations can avoid connection loss
-by first confirming that target RDMA segments
-are large enough to receive results before initiating explicit RDMA operations.
-</t>
-</section>
-
 </section>
 
 <section
@@ -270,7 +191,6 @@ or whether the server has accessed or modified client memory associated with tha
 A Legacy NFS client determines the maximum reply size
 for each operation using the criteria outlined in
 <xref target="section:28d1ea71-26b6-4d20-b855-6d671f579598"/>.
-There are no operations in NFS version 2 or 3 that benefit from short Reply chunk retry.
 </t>
 </section>
 
@@ -359,18 +279,8 @@ Thus no data item in this Upper Layer Protocol is DDP-eligible.
 <t>
 For procedures whose replies do not include an ACL object,
 the size of a reply is determined directly from the NFSACL RPC program's XDR definition.
-</t>
-<t>
-There is no protocol-specified size limit for NFS version 3 ACLs,
-and there is no mechanism in either the NFSACL or NFS RPC programs
-for a Legacy client to ascertain the largest ACL a Legacy server can return.
 Legacy client implementations should choose a maximum size
 for ACLs based on their own internal limits.
-</t>
-<t>
-Because an NFSACL client cannot know in advance how large a returned ACL will be,
-it can use short Reply chunk retry
-when an NFSACL GETACL operation encounters a transport error.
 </t>
 </section>
 
@@ -471,21 +381,11 @@ but such limits are not always guaranteed to be reliable.
 </t>
 <t>
 When an especially large fattr4 result is expected,
-a Reply chunk might be required.
+an NFS version 4.0 client can provide a Reply chunk
+to enable a large result to be returned via explicit RDMA.
 An NFS version 4.0 client can use short Reply chunk retry
 when an NFS COMPOUND containing a GETATTR operation
 encounters a transport error.
-</t>
-<t>
-The use of NFS COMPOUND operations raises the possibility
-of requests that combine a non-idempotent operation
-(e.g. RENAME)
-with a GETATTR operation that requests
-one or more variable-length results.
-This combination should be avoided
-by ensuring that any GETATTR operation
-that requests a result of unpredictable length
-is sent in an NFS COMPOUND by itself.
 </t>
 </section>
 
@@ -758,8 +658,8 @@ There are no DDP-eligible data items in callback procedures
 defined in NFS version 4.1 or NFS version 4.2.
 However, some callback operations,
 such as messages that convey device ID information,
-can be large,
-in which case a Long Call or Reply might be required.
+can be large.
+Message Continuation or a Long message might be used in this situation.
 </t>
 <t>
 When an NFS version 4.1 client can support Long Calls in its backchannel,
