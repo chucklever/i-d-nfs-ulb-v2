@@ -59,7 +59,7 @@ This document specifies Upper-Layer Bindings of Network File System (NFS) protoc
 The RPC-over-RDMA version 2 transport may
 employ direct data placement to convey data payloads
 associated with RPC transactions
-<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>.
+<xref target="RPCRDMA2"/>.
 RPC client and server implementations
 using RPC-over-RDMA version 2 must agree
 which XDR data items
@@ -80,7 +80,7 @@ are also specified by this Binding.
 <t>
 This document contains material required of Upper-Layer Bindings,
 as specified in
-<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>,
+<xref target="RPCRDMA2"/>,
 for the following NFS protocol versions:
 <list style="symbols">
 <t>
@@ -111,7 +111,7 @@ for auxiliary protocols used with NFS versions 2 and 3 (see
 <t>
 This document assumes the reader is already familiar
 with concepts and terminology defined in
-<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>
+<xref target="RPCRDMA2"/>
 and the documents it references.
 </t>
 </section>
@@ -214,7 +214,7 @@ MAY use the alternative well-known port number for its RPC-over-RDMA service
 <xref target="section:be1fa29f-aab2-4074-80a4-b9fe244fd236"/>).
 The chosen port MAY be registered with the RPC portmapper
 using the netids assigned in
-<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>.
+<xref target="RPCRDMA2"/>.
 </t>
 </section>
 
@@ -534,7 +534,7 @@ In the following lists, a "READ operation" refers to any NFS version 4 operation
 that has a DDP-eligible result data item.
 An NFS version 4 client applies
 the mechanism specified in Section 4.3.2 of
-<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>
+<xref target="RPCRDMA2"/>
 is applied to this class of operations as follows:
 <list style="symbols">
 <t>
@@ -847,8 +847,7 @@ UDP by itself MUST NOT be used as an NFS version 4.1 transport.
 <t>
 RPC-over-RDMA version 2 utilizes only
 RDMA Reliable Connected QP type connections
-<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>
-<xref target="RFC5041"/>.
+<xref target="RPCRDMA2"/>.
 RDMA Reliable Connected QPs are
 reliable, connection-oriented transports
 that guarantee in-order delivery,
@@ -916,7 +915,7 @@ then only the NFS version 4 rules for handling retransmission apply.
 <t>
 RPC programs such as NFS are required to have an Upper-Layer Binding specification
 to interoperate on RPC-over-RDMA version 2 transports
-<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>.
+<xref target="RPCRDMA2"/>.
 Via standards action, the Upper-Layer Binding specified in this document can be extended
 to cover versions of the NFS version 4 protocol specified after NFS version 4 minor version 2,
 or to cover separately published extensions to an existing NFS version 4 minor version,
@@ -936,7 +935,7 @@ The choice of what Direct Data Placement mechanism to convey RPC argument and re
 does not affect this
 since it changes only the method of data transfer.
 Because the current document defines only the binding of the NFS protocols atop
-<xref target="I-D.cel-nfsv4-rpcrdma-version-two"/>,
+<xref target="RPCRDMA2"/>,
 all relevant security considerations are, therefore,
 described at that layer.
 </t>
@@ -986,7 +985,7 @@ The current document does not alter these assignments.
  title="Normative References">
 
 <reference
- anchor="I-D.cel-nfsv4-rpcrdma-version-two">
+ anchor="RPCRDMA2">
 <front>
 <title>RPC-over-RDMA Version 2 Protocol</title>
 <author initials="C" surname="Lever" fullname="Chuck Lever">
@@ -995,22 +994,22 @@ The current document does not alter these assignments.
 <author initials="D" surname="Noveck" fullname="David Noveck">
 <organization />
 </author>
-<date month="May" day="6" year="2019"/>
+<date month="Jan" day="17" year="2020"/>
 <abstract>
 <t>
-This document specifies a new version of the transport protocol
-that conveys Remote Procedure Call (RPC) messages on physical
-transports capable of Remote Direct Memory Access (RDMA).
-The new version of this protocol is extensible.
+This document specifies the second version of a transport protocol
+that conveys Remote Procedure Call (RPC) messages
+using Remote Direct Memory Access (RDMA).
+This version of the protocol is extensible.
 </t>
 </abstract>
 </front>
 <seriesInfo
  name="Internet-Draft"
- value="draft-cel-nfsv4-rpcrdma-version-two-09"/>
+ value="draft-ietf-nfsv4-rpcrdma-version-two-01"/>
 <format
  type="TXT"
- target="http://www.ietf.org/internet-drafts/draft-cel-nfsv4-rpcrdma-version-two-09.txt"/>
+ target="http://www.ietf.org/internet-drafts/draft-ietf-nfsv4-rpcrdma-version-two-01.txt"/>
 </reference>
 
 <?rfc include="reference.RFC.1833.xml"?>
