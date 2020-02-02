@@ -218,6 +218,84 @@ using the netids assigned in
 </t>
 </section>
 
+<section
+ anchor="section:B151A6FB-8671-4FE9-A752-04FCAB3C0F82"
+ title="Transport Considerations">
+<t>
+Legacy NFS client implementations often rely on
+a transport-layer keep-alive mechanism to detect
+when a legacy server has become unresponsive.
+When an NFS server is no longer responsive,
+client-side keep-alive terminates the connection,
+which in turn triggers reconnection and RPC retransmission.
+</t>
+
+<section
+ anchor="section:670A2818-916C-49BC-B8C5-102DC65790CA"
+ title="Keep-Alive">
+<t>
+Some RDMA transports (such as the Reliable Connected QP type on InfiniBand)
+have no keep-alive mechanism.
+Without a disconnect or new RPC traffic,
+such connections can remain alive
+long after an NFS server has become unresponsive or unreachable.
+Once an NFS client has consumed all available RPC-over-RDMA version 2 credits
+on that transport connection,
+it awaits a reply indefinitely before sending another RPC request.
+</t>
+<t>
+Legacy NFS clients SHOULD reserve one RPC-over-RDMA version 2 credit
+to use for periodic server or connection health assessment.
+Either peer can use this credit
+to drive an RPC request on an otherwise idle connection,
+triggering either an affirmative server response or a connection termination.
+</t>
+</section>
+
+<section
+ anchor="section:8107F751-9892-4BEC-AE08-D63F7EFBAC89"
+ title="Replay Detection">
+<t>
+Legacy NFS servers can employ request replay detection
+to reduce the risk of data corruption
+that could result when a client retransmits a request.
+A legacy NFS server can choose to send a cached response
+when a replay is detected,
+rather than executing the request again.
+Replay detection is not perfect, but it is usually adequate.
+</t>
+<t>
+For legacy NFS servers, replay detection commonly utilizes
+heuristic indicators such as
+the IP address of the NFS client,
+the source port of the connection,
+the transaction ID of the request,
+and
+the contents of the request's RPC and upper-layer protocol headers.
+In short, replay detection is typically based
+on a connection tuple and the request's XID.
+A legacy NFS client is careful to re-use the same source port,
+if practical, when reconnecting so that
+legacy NFS servers are better able to detect retransmissions.
+</t>
+<t>
+However, a legacy NFS client operating over an RDMA transport
+has no control over connection source ports.
+It is almost certain that
+an RPC request that is retransmitted on a new connection
+can never be detected as a replay
+if the legacy NFS server includes the connection source port
+in its replay detection heuristics.
+</t>
+<t>
+Therefore a legacy NFS server using an RDMA transport
+should never use a legacy NFS client connection's source port
+as part of RPC request replay detection.
+</t>
+</section>
+
+</section>
+
 </section>
 
 <section
