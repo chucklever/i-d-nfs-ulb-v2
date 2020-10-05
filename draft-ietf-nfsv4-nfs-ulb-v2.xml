@@ -123,7 +123,7 @@ NFS version 4.0
 </li>
 <li>
 NFS version 4.1
-<xref target="RFC5661" format="default" sectionFormat="of"/>
+<xref target="RFC8881" format="default" sectionFormat="of"/>
 </li>
 <li>
 NFS version 4.2
@@ -459,7 +459,7 @@ applies to versions of the NFS RPC program
 defined in NFS version 4.0
 <xref target="RFC7530" format="default" sectionFormat="of"/>
 NFS version 4.1
-<xref target="RFC5661" format="default" sectionFormat="of"/>
+<xref target="RFC8881" format="default" sectionFormat="of"/>
 and
 NFS version 4.2
 <xref target="RFC7862" format="default" sectionFormat="of"/>.
@@ -976,7 +976,7 @@ to convey backchannel operations.
 <name>Session-Related Considerations</name>
 <t>
 The presence of an NFS version 4 session (as defined in
-<xref target="RFC5661" format="default" sectionFormat="of"/>)
+<xref target="RFC8881" format="default" sectionFormat="of"/>)
 does not effect the operation of RPC-over-RDMA version 2.
 None of the operations introduced to support NFS sessions
 (e.g., the SEQUENCE operation) contain DDP-eligible data items.
@@ -1044,7 +1044,7 @@ such transports include TCP and the Stream Control Transmission Protocol (SCTP).
 </li>
 </ul>
 <t>
-<xref target="RFC5661" section="2.9.1" format="default" sectionFormat="of"/>
+<xref target="RFC8881" section="2.9.1" format="default" sectionFormat="of"/>
 further states:
 </t>
 <ul spacing="normal" empty="true">
@@ -1239,9 +1239,6 @@ The current document does not alter these assignments.
  href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
 <xi:include
  xmlns:xi="http://www.w3.org/2001/XInclude"
- href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5661.xml"/>
-<xi:include
- xmlns:xi="http://www.w3.org/2001/XInclude"
  href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6335.xml"/>
 <xi:include
  xmlns:xi="http://www.w3.org/2001/XInclude"
@@ -1258,6 +1255,9 @@ The current document does not alter these assignments.
 <xi:include
  xmlns:xi="http://www.w3.org/2001/XInclude"
  href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+<xi:include
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8881.xml"/>
 </references>
 
 <references>
