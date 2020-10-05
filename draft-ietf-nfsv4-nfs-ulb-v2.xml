@@ -930,11 +930,11 @@ no XDR data item in the NFS version 4.0 callback RPC program is DDP-eligible.
 <t>
 In NFS version 4.1 and newer minor versions,
 callback operations may appear on the same connection
-as is used for NFS version 4 forward channel client requests.
+that is in use for NFS version 4 forward channel client requests.
 NFS version 4 clients and servers
 <bcp14>MUST</bcp14>
-use the approach described in
-<xref target="RFC8167" format="default" sectionFormat="of"/>
+use the mechanisms described in
+<xref target="I-D.ietf-nfsv4-rpcrdma-version-two" section="4.5" format="default" sectionFormat="of"/>
 to convey backchannel operations on an RPC-over-RDMA version 2 transport.
 </t>
 <t>
@@ -1245,9 +1245,6 @@ The current document does not alter these assignments.
 <xi:include
  xmlns:xi="http://www.w3.org/2001/XInclude"
  href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7862.xml"/>
-<xi:include
- xmlns:xi="http://www.w3.org/2001/XInclude"
- href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8167.xml"/>
 <xi:include
  xmlns:xi="http://www.w3.org/2001/XInclude"
  href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
