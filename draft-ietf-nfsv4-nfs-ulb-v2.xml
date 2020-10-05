@@ -1064,12 +1064,12 @@ be used as an NFS version 4.1 transport.
 </ul>
 <t>
 RPC-over-RDMA version 2 utilizes only
-RDMA Reliable Connected QP type connections
-<xref target="I-D.ietf-nfsv4-rpcrdma-version-two" format="default" sectionFormat="of"/>.
-RDMA Reliable Connected QPs are
 reliable, connection-oriented transports
 that guarantee in-order delivery,
-meeting all the above requirements.
+meeting all the above requirements for NFS version 4.0 and 4.1.
+See
+<xref target="I-D.ietf-nfsv4-rpcrdma-version-two" section="4.2.1" format="default" sectionFormat="of"/>
+for more details.
 </t>
 </section>
 
