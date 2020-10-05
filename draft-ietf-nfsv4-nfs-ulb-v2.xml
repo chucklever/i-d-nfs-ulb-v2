@@ -757,12 +757,10 @@ return their results inline.
  toc="default">
 <name>Chunk List Complexity</name>
 <t>
-The RPC-over-RDMA version 2 protocol does not place any limit
-on the number of chunks or segments that may appear in Read or Write lists.
-However, for various reasons, NFS version 4 server implementations
-often have practical limits on the number of chunks or segments
-they can process in a single RPC transaction
-conveyed via RPC-over-RDMA version 2.
+By default, the RPC-over-RDMA version 2 protocol places limits
+on the number of chunks or segments
+that may appear in Read or Write lists (see
+<xref target="I-D.ietf-nfsv4-rpcrdma-version-two" section="5.2" format="default" sectionFormat="of"/>).
 </t>
 <t>
 These implementation limits are especially important
@@ -774,7 +772,8 @@ which increases the complexity of chunk lists
 independent of the particular NFS version 4 COMPOUND being conveyed.
 </t>
 <t>
-In the absence of explicit knowledge of the server's limits,
+In the absence of an explicit transport property exchange that
+alters these limits,
 NFS version 4 clients
 <bcp14>SHOULD</bcp14>
 follow the prescriptions listed below
@@ -793,9 +792,6 @@ both.
 </li>
 <li>
 The Write list can contain no more than one Write chunk.
-</li>
-<li>
-Any chunk can contain up to sixteen RDMA segments.
 </li>
 </ul>
 <t>
@@ -835,8 +831,10 @@ retransmit the failing request,
 as the result would be the same error.
 It
 <bcp14>SHOULD</bcp14>
-immediately terminate the RPC transaction
-associated with the XID in the reply.
+terminate the RPC transaction
+associated with the XID in the reply
+without further processing,
+and report an error to the RPC consumer.
 </t>
 </section>
 
