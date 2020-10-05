@@ -100,7 +100,7 @@ Other operational details, such as
 RPC binding assignments,
 pairing Write chunks with result data items,
 and reply size estimation,
-are also specified by this Binding.
+are also specified by such a Binding.
 </t>
 <t>
 This document contains material required of Upper-Layer Bindings,
@@ -325,7 +325,7 @@ triggering either an affirmative server response or a connection termination.
 <name>Replay Detection</name>
 <t>
 Legacy NFS servers typically employ request replay detection
-to reduce the risk of data corruption
+to reduce the risk of data and file namespace corruption
 that could result when an NFS client retransmits a non-idempotent NFS request.
 A legacy NFS server can send a cached response
 when a replay is detected,
@@ -500,7 +500,7 @@ The linkdata field in the READLINK4resok structure
 NFS version 4.2 introduces an enhanced READ operation called READ_PLUS
 <xref target="RFC7862" format="default" sectionFormat="of"/>.
 READ_PLUS enables an NFS server
-to perform inline data reduction of READ results
+to perform data reduction of READ results
 so that the returned READ data is more compact.
 </t>
 <t>
@@ -522,7 +522,7 @@ A counted pattern.
 <t>
 Upon receipt of a READ_PLUS result,
 an NFSv4.2 client expands the returned list
-into a preferred local representation of the original file content.
+into the preferred local representation of the original file content.
 </t>
 <t>
 Before receiving that result,
@@ -546,7 +546,7 @@ the result of each read I/O.
 Therefore this Upper Layer Binding
 does not make any element of an NFSv4.2 READ_PLUS Reply DDP-eligible.
 Further, this Upper Layer Binding recommends that
-implementers disable the use of the READ_PLUS operation
+implementations avoid the use of the READ_PLUS operation
 on NFS/RDMA mount points.
 </t>
 </section>
@@ -659,10 +659,8 @@ are much smaller than this maximum.
 <name>RPC Binding Considerations</name>
 <t>
 NFS version 4 servers are required to listen on TCP port 2049,
-and they are not required to register with a rpcbind service
+and are not required to register with an rpcbind service
 <xref target="RFC7530" format="default" sectionFormat="of"/>.
-</t>
-<t>
 Therefore, an NFS version 4 server supporting RPC-over-RDMA version 2
 <bcp14>MUST</bcp14>
 use the alternative well-known port number
@@ -703,7 +701,7 @@ that has a DDP-eligible result data item.
 An NFS version 4 client applies
 the mechanism specified in
 <xref target="I-D.ietf-nfsv4-rpcrdma-version-two" section="4.3.2" format="default" sectionFormat="of"/>
-is applied to this class of operations as follows:
+to this class of operations as follows:
 </t>
 <ul spacing="normal" bare="false" empty="false">
 <li>
@@ -713,7 +711,7 @@ it leaves the Write list empty.
 </li>
 </ul>
 <t>
-An NFS version 4 server applies that mechanism as follows:
+An NFS version 4 server acts as follows:
 </t>
 <ul spacing="normal" bare="false" empty="false">
 <li>
@@ -909,7 +907,7 @@ even when the forward channel uses an RPC-over-RDMA version 2 transport.
 <t>
 No operation in the NFS version 4.0 callback RPC program
 conveys a data payload of significant size.
-Therefore, no XDR data items in this RPC program is DDP-eligible.
+Therefore, no XDR data item in this RPC program is DDP-eligible.
 </t>
 <t>
 A CB_RECALL reply is small and fixed in size.
