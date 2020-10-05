@@ -83,7 +83,8 @@ Instructions are on that page as well.
 <t>
 The RPC-over-RDMA version 2 transport may
 employ direct data placement to convey data payloads
-associated with RPC transactions
+associated with RPC transactions,
+as described in
 <xref target="I-D.ietf-nfsv4-rpcrdma-version-two" format="default" sectionFormat="of"/>.
 RPC client and server implementations
 using RPC-over-RDMA version 2 must agree
@@ -104,7 +105,7 @@ are also specified by such a Binding.
 </t>
 <t>
 This document contains material required of Upper-Layer Bindings,
-as specified in
+as specified in Appendix&nbsp;A of
 <xref target="I-D.ietf-nfsv4-rpcrdma-version-two" format="default" sectionFormat="of"/>,
 for the following NFS protocol versions:
 </t>
@@ -137,7 +138,7 @@ for auxiliary protocols used with NFS versions 2 and 3 (see
 </t>
 <t>
 This document assumes the reader is already familiar
-with concepts and terminology defined in
+with concepts and terminology defined throughout
 <xref target="I-D.ietf-nfsv4-rpcrdma-version-two" format="default" sectionFormat="of"/>
 and the documents it references.
 </t>
@@ -291,7 +292,7 @@ The chosen port
 <bcp14>MAY</bcp14>
 be registered with the RPC portmapper
 using the netids assigned in
-<xref target="I-D.ietf-nfsv4-rpcrdma-version-two" format="default" sectionFormat="of"/>.
+<xref target="I-D.ietf-nfsv4-rpcrdma-version-two" section="12" format="default" sectionFormat="of"/>.
 </t>
 </section>
 
@@ -1188,6 +1189,7 @@ The choice of what Direct Data Placement mechanism to convey RPC argument and re
 does not affect this
 since it changes only the method of data transfer.
 Because the current document defines only the binding of the NFS protocols atop
+RPC-over-RDMA version 2
 <xref target="I-D.ietf-nfsv4-rpcrdma-version-two" format="default" sectionFormat="of"/>,
 all relevant security considerations are, therefore,
 described at that layer.
