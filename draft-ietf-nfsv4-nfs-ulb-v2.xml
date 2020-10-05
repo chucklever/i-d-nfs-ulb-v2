@@ -900,26 +900,24 @@ to notify NFS version 4 clients of events such as recalled delegations.
  toc="default">
 <name>NFS Version 4.0 Callback</name>
 <t>
-NFS version 4.0 implementations typically employ
-a separate TCP connection to handle callback operations,
-even when the forward channel uses an RPC-over-RDMA version 2 transport.
+An NFS version 4.0 client uses the SETCLIENTID operation
+to advertise the
+IP address,
+port,
+and
+netid
+of its NFS version 4.0 callback service.
+When an NFS version 4.0 server provides a backchannel service
+to an NFS version 4.0 client that
+uses RPC-over-RDMA version 2 for its forward channel,
+the server
+<bcp14>MUST</bcp14>
+advertise the backchannel service
+using either the "tcp" or "tcp6" netid.
 </t>
 <t>
-No operation in the NFS version 4.0 callback RPC program
-conveys a data payload of significant size.
-Therefore, no XDR data item in this RPC program is DDP-eligible.
-</t>
-<t>
-A CB_RECALL reply is small and fixed in size.
-The CB_GETATTR reply contains a variable-length fattr4 data item.
-See
-<xref target="section_f8c4e904-1294-4d04-b4f2-8d702f67c067" format="default" sectionFormat="of"/>
-for a discussion of reply size prediction for this data item.
-</t>
-<t>
-An NFS version 4.0 client advertises netids
-and ad hoc port addresses for contacting its NFS version 4.0 callback service
-using the SETCLIENTID operation.
+Because the backchannel does not operate on RPC-over-RDMA,
+no XDR data item in the NFS version 4.0 callback RPC program is DDP-eligible.
 </t>
 </section>
 
