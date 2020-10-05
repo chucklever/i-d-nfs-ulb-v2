@@ -375,7 +375,7 @@ as part of its NFS request replay detection mechanism.
 <t>
 Storage administrators typically deploy
 NFS versions 2 and 3 with several other protocols,
-sometimes referred to as "NFS auxiliary protocols."
+sometimes referred to as the "NFS auxiliary protocols."
 These are distinct RPC programs that define procedures
 that are not part of the NFS RPC program (100003).
 The Upper-Layer Bindings in this section apply to:
@@ -395,9 +395,9 @@ described in Chapter 11 of
 <xref target="XNFS" format="default" sectionFormat="of"/>
 </li>
 <li>
-Version 1 of the NFSACL RPC program (100227),
-which does not have a public definition.
-NFSACL is treated in this document as a de facto standard,
+Versions 2 and 3 of the NFSACL RPC program (100227).
+The NFSACL program does not have a public definition.
+In this document it is treated as a de facto standard,
 as there are several interoperating implementations.
 </li>
 </ul>
@@ -427,9 +427,9 @@ to enable interoperation of these protocols when NFS/RDMA is in use.
 <t>
 Often legacy clients and servers that
 support the NFSACL RPC program convey NFSACL procedures
-on the same connection as the NFS RPC program (100003).
-Utilizing the same connection obviates the need
-for separate rpcbind queries to discover server support for this RPC program.
+on the same transport connection and port as the NFS RPC program (100003).
+Utilizing the same port obviates the need
+for separate a rpcbind query to discover server support for this RPC program.
 </t>
 <t>
 ACLs are typically small,
