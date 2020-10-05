@@ -165,27 +165,6 @@ when, and only when, they appear in all capitals, as shown here.
 </section>
 
 <section
- anchor="section_28d1ea71-26b6-4d20-b855-6d671f579598"
- numbered="true"
- removeInRFC="false"
- toc="default">
-<name>Reply Size Estimation</name>
-<t>
-During the construction of each RPC Call message,
-a Requester is responsible for allocating appropriate resources
-for receiving the corresponding Reply message.
-If the Requester expects that the RPC Reply message
-could be larger than its inline threshold, it
-<bcp14>MAY</bcp14>
-provide Write chunks wherein the Responder can place results
-and
-Reply chunks wherein the Responder can place the reply's Payload stream.
-A message continuation facility is also available in RPC-over-RDMA version 2
-to convey RPC messages that are larger than the transport's inline threshold.
-</t>
-</section>
-
-<section
  anchor="section_9cfda6eb-2271-4e71-8389-61d14e05fff0"
  numbered="true"
  removeInRFC="false"
@@ -232,17 +211,59 @@ or whether the server has accessed or modified client memory associated with tha
 </t>
 
 <section
- anchor="section_99C913E0-25D7-495B-834A-F5A46EEDC9F8"
+ anchor="section_28d1ea71-26b6-4d20-b855-6d671f579598"
  numbered="true"
  removeInRFC="false"
  toc="default">
 <name>Reply Size Estimation</name>
 <t>
-A Legacy NFS client determines the maximum reply size
-for each operation using the criteria outlined in
-<xref target="section_28d1ea71-26b6-4d20-b855-6d671f579598" format="default" sectionFormat="of"/>.
+During the construction of each RPC Call message,
+a Requester is responsible for
+allocating appropriate transport resources
+to receive the corresponding Reply message.
+These resources must be capable of holding the entire Reply,
+therefore the Requester needs to estimate the maximum
+possible size of the expected Reply message.
 </t>
+<ul spacing="normal" bare="false" empty="false">
+<li>
+In many cases, the expected Reply can fit in
+one or a few RDMA Send messages.
+The Requester need not provision any RDMA resources,
+relying instead on message continuation to handle the
+entire Reply message.
+</li>
+<li>
+In cases where the Requester deems direct data placement
+to be the most efficient transfer mechanism,
+it provisions Write chunks wherein the Responder can place results.
+In these cases,
+the Requester must reliably estimate the maximum size
+of each result that is to be placed in a Write chunk.
+</li>
+<li>
+When the Requester expects an especially large Reply message,
+it can provision a combination of a Reply chunk
+and
+Write chunks for result data items.
+In such cases,
+the Requester must reliably estimate the maximum size
+of each result that is to be placed in a Write chunk
+and
+the maximum size of the remainder to be placed in the Reply chunk.
+</li>
+</ul>
+<t>
+A legacy NFS client needs to make every effort
+to avoid retransmission of non-idempotent NFS requests
+due to underestimated Reply resources.
+Thanks to the mechanism of message continuation
+in RPC-over-RDMA version 2, the need for such retransmission
+is greatly reduced.
+</t>
+
 </section>
+
 
 <section
  anchor="section_cd88140e-916e-4b36-94e1-f0db878c129c"
@@ -440,8 +461,10 @@ Thus no data item in this Upper-Layer Protocol is DDP-eligible.
 <t>
 For procedures whose replies do not include an ACL object,
 the size of a reply is determined directly from the NFSACL RPC program's XDR definition.
-Legacy client implementations should choose a maximum size
-for ACLs based on internal limits.
+However, legacy client implementations should choose a maximum size
+for ACLs based on internal limits,
+and can rely on message continuation
+to handle the a priori unknown size of large ACL objects in Replies.
 </t>
 </section>
 
@@ -614,11 +637,12 @@ but such limits are not always guaranteed to be reliable.
 </t>
 <t>
 When an NFS version 4.0 client expects an especially sizeable fattr4 result,
-it can provide a Reply chunk to enable that server to return that result
+it can
+rely on message continuation
+or
+provision a Reply chunk
+to enable that server to return that result
 via explicit RDMA.
-An NFS version 4.0 client can use short Reply chunk retry
-when an NFS COMPOUND containing a GETATTR operation
-encounters a transport error.
 </t>
 </section>
 
