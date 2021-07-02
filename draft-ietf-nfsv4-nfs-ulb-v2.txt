@@ -880,9 +880,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
    [I-D.ietf-nfsv4-rpcrdma-version-two]
               Lever, C. and D. Noveck, "RPC-over-RDMA Version 2
               Protocol", Work in Progress, Internet-Draft, draft-ietf-
-              nfsv4-rpcrdma-version-two-03, 10 August 2020,
+              nfsv4-rpcrdma-version-two-04, 4 February 2021,
               <https://tools.ietf.org/html/draft-ietf-nfsv4-rpcrdma-
-              version-two-03>.
+              version-two-04>.
 
    [RFC1833]  Srinivasan, R., "Binding Protocols for ONC RPC Version 2",
               RFC 1833, DOI 10.17487/RFC1833, August 1995,
