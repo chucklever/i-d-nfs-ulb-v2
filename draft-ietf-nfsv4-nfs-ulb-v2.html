@@ -13,25 +13,25 @@ Upper-Layer Bindings of Network File System (NFS) protocol versions
 to RPC-over-RDMA version 2.
  
     " name="description">
-<meta content="xml2rfc 3.6.0" name="generator">
+<meta content="xml2rfc 3.8.0" name="generator">
 <meta content="NFS-Over-RDMA" name="keyword">
 <meta content="draft-ietf-nfsv4-nfs-ulb-v2-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.6.0
-    Python 3.8.8
+  xml2rfc 3.8.0
+    Python 3.9.5
     appdirs 1.4.4
-    ConfigArgParse 1.2.3
+    ConfigArgParse 1.3
     google-i18n-address 2.4.0
     html5lib 1.1
     intervaltree 3.1.0
-    Jinja2 2.11.2
+    Jinja2 2.11.3
     kitchen 1.2.6
     lxml 4.6.3
     pycountry 20.7.3
-    pyflakes 2.2.0
+    pyflakes 2.3.0
     PyYAML 5.4.1
     requests 2.25.1
-    setuptools 51.3.3
+    setuptools 52.0.0
     six 1.15.0
 -->
 <link href="draft-ietf-nfsv4-nfs-ulb-v2.xml" rel="alternate" type="application/rfc+xml">
@@ -822,11 +822,11 @@ address div.right {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">NFS on RPC-Over-RDMA V2</td>
-<td class="right">April 2021</td>
+<td class="right">July 2021</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Lever</td>
-<td class="center">Expires 9 October 2021</td>
+<td class="center">Expires 3 January 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -839,12 +839,12 @@ address div.right {
 <dd class="internet-draft">draft-ietf-nfsv4-nfs-ulb-v2-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2021-04-07" class="published">7 April 2021</time>
+<time datetime="2021-07-02" class="published">2 July 2021</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2021-10-09">9 October 2021</time></dd>
+<dd class="expires"><time datetime="2022-01-03">3 January 2022</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -863,14 +863,14 @@ Upper-Layer Bindings of Network File System (NFS) protocol versions
 to RPC-over-RDMA version 2.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
-      <p id="section-note.1-1">
+      <p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
 Discussion of this draft takes place
 on the NFSv4 working group mailing list (nfsv4@ietf.org),
 which is archived at
 <span><a href="https://mailarchive.ietf.org/arch/browse/nfsv4/">https://mailarchive.ietf.org/arch/browse/nfsv4/</a></span>.
 Working Group information can be found at
-<span><a href="https://datatracker.ietf.org/wg/nfsv4/about/">https://datatracker.ietf.org/wg/nfsv4/about/</a></span>.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
-<p id="section-note.1-2">This note is to be removed before publishing as an RFC.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<span><a href="https://datatracker.ietf.org/wg/nfsv4/about/">https://datatracker.ietf.org/wg/nfsv4/about/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
 <p id="section-note.1-3">
 The source for this draft is maintained in GitHub.
 Suggested changes can be submitted as pull requests at
@@ -896,7 +896,7 @@ Instructions are on that page as well.<a href="#section-note.1-3" class="pilcrow
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 9 October 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 January 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -924,88 +924,88 @@ Instructions are on that page as well.<a href="#section-note.1-3" class="pilcrow
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
 <a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.1">
+<nav class="toc"><ul class="compact toc ulEmpty">
+<li class="compact toc ulEmpty" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.2">
+          <li class="compact toc ulEmpty" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-requirements-language" class="xref">Requirements Language</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.3">
+          <li class="compact toc ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-upper-layer-binding-for-nfs" class="xref">Upper-Layer Binding for NFS Versions 2 and 3</a></p>
-<ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.3.2.1">
+<ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.3.2.1">
                 <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="xref">3.1</a>.  <a href="#name-reply-size-estimation" class="xref">Reply Size Estimation</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.3.2.2">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.2">
                 <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>.  <a href="#name-rpc-binding-considerations" class="xref">RPC Binding Considerations</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.3.2.3">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.3">
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-transport-considerations" class="xref">Transport Considerations</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.4">
+          <li class="compact toc ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-upper-layer-bindings-for-nf" class="xref">Upper-Layer Bindings for NFS Version 2 and 3 Auxiliary Protocols</a></p>
-<ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.4.2.1">
+<ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.4.2.1">
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="xref">4.1</a>.  <a href="#name-mount-nlm-and-nsm-protocols" class="xref">MOUNT, NLM, and NSM Protocols</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.4.2.2">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.4.2.2">
                 <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="xref">4.2</a>.  <a href="#name-nfsacl-protocol" class="xref">NFSACL Protocol</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.5">
+          <li class="compact toc ulEmpty" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-upper-layer-binding-for-nfs-" class="xref">Upper-Layer Binding For NFS Version 4</a></p>
-<ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.5.2.1">
+<ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.5.2.1">
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-ddp-eligibility" class="xref">DDP-Eligibility</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.2">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.5.2.2">
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-reply-size-estimation-2" class="xref">Reply Size Estimation</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.3">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.5.2.3">
                 <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="xref">5.3</a>.  <a href="#name-rpc-binding-considerations-2" class="xref">RPC Binding Considerations</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.4">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.5.2.4">
                 <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="xref">5.4</a>.  <a href="#name-nfs-compound-requests" class="xref">NFS COMPOUND Requests</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.5">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.5.2.5">
                 <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="xref">5.5</a>.  <a href="#name-nfs-callback-requests" class="xref">NFS Callback Requests</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.6">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.5.2.6">
                 <p id="section-toc.1-1.5.2.6.1"><a href="#section-5.6" class="xref">5.6</a>.  <a href="#name-session-related-considerati" class="xref">Session-Related Considerations</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.7">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.5.2.7">
                 <p id="section-toc.1-1.5.2.7.1"><a href="#section-5.7" class="xref">5.7</a>.  <a href="#name-transport-considerations-2" class="xref">Transport Considerations</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.6">
+          <li class="compact toc ulEmpty" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-extending-nfs-upper-layer-b" class="xref">Extending NFS Upper-Layer Bindings</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.7">
+          <li class="compact toc ulEmpty" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.8">
+          <li class="compact toc ulEmpty" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-iana-considerations" class="xref">IANA Considerations</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.9">
+          <li class="compact toc ulEmpty" id="section-toc.1-1.9">
             <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-references" class="xref">References</a></p>
-<ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.9.2.1">
+<ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.9.2.1">
                 <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="xref">9.1</a>.  <a href="#name-normative-references" class="xref">Normative References</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.9.2.2">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.9.2.2">
                 <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="xref">9.2</a>.  <a href="#name-informative-references" class="xref">Informative References</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.10">
+          <li class="compact toc ulEmpty" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-appendix.a" class="xref"></a><a href="#name-acknowledgments" class="xref">Acknowledgments</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.11">
+          <li class="compact toc ulEmpty" id="section-toc.1-1.11">
             <p id="section-toc.1-1.11.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-authors-address" class="xref">Author's Address</a></p>
 </li>
         </ul>

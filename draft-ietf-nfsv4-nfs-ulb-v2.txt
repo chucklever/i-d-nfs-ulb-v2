@@ -4,8 +4,8 @@
 
 Network File System Version 4                                   C. Lever
 Internet-Draft                                                    Oracle
-Intended status: Standards Track                            7 April 2021
-Expires: 9 October 2021
+Intended status: Standards Track                             2 July 2021
+Expires: 3 January 2022
 
 
 Network File System (NFS) Upper-Layer Binding To RPC-Over-RDMA Version 2
@@ -18,13 +18,13 @@ Abstract
 
 Note
 
+   This note is to be removed before publishing as an RFC.
+
    Discussion of this draft takes place on the NFSv4 working group
    mailing list (nfsv4@ietf.org), which is archived at
    https://mailarchive.ietf.org/arch/browse/nfsv4/. Working Group
    information can be found at https://datatracker.ietf.org/wg/nfsv4/
    about/.
-
-   This note is to be removed before publishing as an RFC.
 
    The source for this draft is maintained in GitHub.  Suggested changes
    can be submitted as pull requests at https://github.com/chucklever/
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 October 2021.
+   This Internet-Draft will expire on 3 January 2022.
 
 
 
@@ -53,9 +53,9 @@ Status of This Memo
 
 
 
-Lever                    Expires 9 October 2021                 [Page 1]
+Lever                    Expires 3 January 2022                 [Page 1]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
 Copyright Notice
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Lever                    Expires 9 October 2021                 [Page 2]
+Lever                    Expires 3 January 2022                 [Page 2]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
 1.  Introduction
@@ -165,9 +165,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                 [Page 3]
+Lever                    Expires 3 January 2022                 [Page 3]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
 3.  Upper-Layer Binding for NFS Versions 2 and 3
@@ -221,9 +221,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                 [Page 4]
+Lever                    Expires 3 January 2022                 [Page 4]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
    *  When the Requester expects an especially large Reply message, it
@@ -277,9 +277,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                 [Page 5]
+Lever                    Expires 3 January 2022                 [Page 5]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
    Legacy NFS clients SHOULD reserve one RPC-over-RDMA version 2 credit
@@ -333,9 +333,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                 [Page 6]
+Lever                    Expires 3 January 2022                 [Page 6]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
    *  Versions 2 and 3 of the NFSACL RPC program (100227).  The NFSACL
@@ -389,9 +389,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                 [Page 7]
+Lever                    Expires 3 January 2022                 [Page 7]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
    *  The linkdata field in the READLINK4resok structure
@@ -445,9 +445,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                 [Page 8]
+Lever                    Expires 3 January 2022                 [Page 8]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
 5.2.  Reply Size Estimation
@@ -501,9 +501,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                 [Page 9]
+Lever                    Expires 3 January 2022                 [Page 9]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
 5.3.  RPC Binding Considerations
@@ -557,9 +557,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                [Page 10]
+Lever                    Expires 3 January 2022                [Page 10]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
    *  If a READ operation returns a union arm which does not contain a
@@ -613,9 +613,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                [Page 11]
+Lever                    Expires 3 January 2022                [Page 11]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
    *  A problem is detected during XDR decoding of the RPC Call message
@@ -669,9 +669,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                [Page 12]
+Lever                    Expires 3 January 2022                [Page 12]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
    Because the backchannel does not operate on RPC-over-RDMA, no XDR
@@ -725,9 +725,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                [Page 13]
+Lever                    Expires 3 January 2022                [Page 13]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
    When a transport error occurs (e.g., an RDMA2_ERROR type message is
@@ -781,9 +781,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                [Page 14]
+Lever                    Expires 3 January 2022                [Page 14]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
 5.7.2.  Retransmission and Keep-alive
@@ -837,9 +837,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                [Page 15]
+Lever                    Expires 3 January 2022                [Page 15]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
 7.  Security Considerations
@@ -893,9 +893,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                [Page 16]
+Lever                    Expires 3 January 2022                [Page 16]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
@@ -949,9 +949,9 @@ Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
 
 
 
-Lever                    Expires 9 October 2021                [Page 17]
+Lever                    Expires 3 January 2022                [Page 17]
 
-Internet-Draft           NFS on RPC-Over-RDMA V2              April 2021
+Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
 
    [RFC5041]  Shah, H., Pinkerton, J., Recio, R., and P. Culley, "Direct
@@ -1005,4 +1005,4 @@ Author's Address
 
 
 
-Lever                    Expires 9 October 2021                [Page 18]
+Lever                    Expires 3 January 2022                [Page 18]
