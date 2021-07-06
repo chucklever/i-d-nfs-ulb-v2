@@ -802,9 +802,9 @@ Acknowledgments
    author also wishes to thank Bill Baker and Greg Marsden for their
    support of this work.
 
-   Special thanks go to Transport Area Director Magnus Westerlund, NFSV4
-   Working Group Chairs Brian Pawlowski, and David Noveck, and NFSV4
-   Working Group Secretary Thomas Haynes for their support.
+   Special thanks go to Transport Area Directors Zaheduzzaman Sarker,
+   NFSV4 Working Group Chairs Brian Pawlowski, and David Noveck, and
+   NFSV4 Working Group Secretary Thomas Haynes for their support.
 
 Author's Address
 
