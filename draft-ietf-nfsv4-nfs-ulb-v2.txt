@@ -47,17 +47,6 @@ Status of This Memo
 
    This Internet-Draft will expire on 7 January 2022.
 
-
-
-
-
-
-
-Lever                    Expires 7 January 2022                 [Page 1]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
-
 Copyright Notice
 
    Copyright (c) 2021 IETF Trust and the persons identified as the
@@ -74,45 +63,32 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
-   2.  Requirements Language . . . . . . . . . . . . . . . . . . . .   3
-   3.  Upper-Layer Binding for NFS Versions 2 and 3  . . . . . . . .   4
-     3.1.  Reply Size Estimation . . . . . . . . . . . . . . . . . .   4
-     3.2.  RPC Binding Considerations  . . . . . . . . . . . . . . .   5
-     3.3.  Transport Considerations  . . . . . . . . . . . . . . . .   5
+   1.  Introduction
+   2.  Requirements Language
+   3.  Upper-Layer Binding for NFS Versions 2 and 3
+     3.1.  Reply Size Estimation
+     3.2.  RPC Binding Considerations
+     3.3.  Transport Considerations
    4.  Upper-Layer Bindings for NFS Version 2 and 3 Auxiliary
-           Protocols . . . . . . . . . . . . . . . . . . . . . . . .   6
-     4.1.  MOUNT, NLM, and NSM Protocols . . . . . . . . . . . . . .   7
-     4.2.  NFSACL Protocol . . . . . . . . . . . . . . . . . . . . .   7
-   5.  Upper-Layer Binding For NFS Version 4 . . . . . . . . . . . .   7
-     5.1.  DDP-Eligibility . . . . . . . . . . . . . . . . . . . . .   7
-     5.2.  Reply Size Estimation . . . . . . . . . . . . . . . . . .   9
-     5.3.  RPC Binding Considerations  . . . . . . . . . . . . . . .  10
-     5.4.  NFS COMPOUND Requests . . . . . . . . . . . . . . . . . .  10
-     5.5.  NFS Callback Requests . . . . . . . . . . . . . . . . . .  12
-     5.6.  Session-Related Considerations  . . . . . . . . . . . . .  13
-     5.7.  Transport Considerations  . . . . . . . . . . . . . . . .  14
-   6.  Extending NFS Upper-Layer Bindings  . . . . . . . . . . . . .  15
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  16
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  17
-   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  18
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  18
-
-
-
-
-
-
-
-
-
-Lever                    Expires 7 January 2022                 [Page 2]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
+           Protocols
+     4.1.  MOUNT, NLM, and NSM Protocols
+     4.2.  NFSACL Protocol
+   5.  Upper-Layer Binding For NFS Version 4
+     5.1.  DDP-Eligibility
+     5.2.  Reply Size Estimation
+     5.3.  RPC Binding Considerations
+     5.4.  NFS COMPOUND Requests
+     5.5.  NFS Callback Requests
+     5.6.  Session-Related Considerations
+     5.7.  Transport Considerations
+   6.  Extending NFS Upper-Layer Bindings
+   7.  Security Considerations
+   8.  IANA Considerations
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
+   Acknowledgments
+   Author's Address
 
 1.  Introduction
 
@@ -156,19 +132,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
    "OPTIONAL" in this document are to be interpreted as described in
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
-
-
-
-
-
-
-
-
-
-Lever                    Expires 7 January 2022                 [Page 3]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
 
 3.  Upper-Layer Binding for NFS Versions 2 and 3
 
@@ -217,15 +180,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
       Requester must reliably estimate the maximum size of each result
       that is to be placed in a Write chunk.
 
-
-
-
-
-Lever                    Expires 7 January 2022                 [Page 4]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
-
    *  When the Requester expects an especially large Reply message, it
       can provision a combination of a Reply chunk and Write chunks for
       result data items.  In such cases, the Requester must reliably
@@ -269,18 +223,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
    has consumed all available RPC-over-RDMA version 2 credits on that
    transport connection, it awaits a reply indefinitely before sending
    another RPC request.
-
-
-
-
-
-
-
-
-Lever                    Expires 7 January 2022                 [Page 5]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
 
    Legacy NFS clients SHOULD reserve one RPC-over-RDMA version 2 credit
    to use for periodic server or connection health assessment.  Either
@@ -331,13 +273,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
    *  Version 1 of the NSM RPC program (100024), described in Chapter 11
       of [XNFS]
 
-
-
-Lever                    Expires 7 January 2022                 [Page 6]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
-
    *  Versions 2 and 3 of the NFSACL RPC program (100227).  The NFSACL
       program does not have a public definition.  In this document it is
       treated as a de facto standard, as there are several
@@ -386,14 +321,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
 
    *  The opaque data field in the READ4resok structure
 
-
-
-
-Lever                    Expires 7 January 2022                 [Page 7]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
-
    *  The linkdata field in the READLINK4resok structure
 
 5.1.1.  The NFSv4.2 READ_PLUS operation
@@ -436,19 +363,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
    NFSv4.2 READ_PLUS Reply DDP-eligible.  Further, this Upper Layer
    Binding recommends that implementations avoid the use of the
    READ_PLUS operation on NFS/RDMA mount points.
-
-
-
-
-
-
-
-
-
-Lever                    Expires 7 January 2022                 [Page 8]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
 
 5.2.  Reply Size Estimation
 
@@ -497,15 +411,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
    practice, objects such as ACLs, named attributes, layout bodies, and
    security labels are much smaller than this maximum.
 
-
-
-
-
-Lever                    Expires 7 January 2022                 [Page 9]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
-
 5.3.  RPC Binding Considerations
 
    NFS version 4 servers are required to listen on TCP port 2049, and
@@ -551,17 +456,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
       chunk, then the corresponding READ operation MUST return all of
       its result data items inline.
 
-
-
-
-
-
-
-Lever                    Expires 7 January 2022                [Page 10]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
-
    *  If a READ operation returns a union arm which does not contain a
       DDP-eligible result, and the NFS version 4 client has provided a
       matching non-empty Write chunk, an NFS version 4 server MUST
@@ -606,17 +500,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
    *  A problem is detected by the transport layer while parsing the
       transport header in an RPC Call message.  The server responds with
       an RDMA2_ERROR message with the err field set to ERR_CHUNK.
-
-
-
-
-
-
-
-Lever                    Expires 7 January 2022                [Page 11]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
 
    *  A problem is detected during XDR decoding of the RPC Call message
       while the RPC layer reassembles the call's XDR stream.  The server
@@ -666,14 +549,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
    2 for its forward channel, the server MUST advertise the backchannel
    service using either the "tcp" or "tcp6" netid.
 
-
-
-
-Lever                    Expires 7 January 2022                [Page 12]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
-
    Because the backchannel does not operate on RPC-over-RDMA, no XDR
    data item in the NFS version 4.0 callback RPC program is DDP-
    eligible.
@@ -722,14 +597,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
    Requester to distinguish whether failure occurred before or after the
    Responder executed the requested operations.
 
-
-
-
-Lever                    Expires 7 January 2022                [Page 13]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
-
    When a transport error occurs (e.g., an RDMA2_ERROR type message is
    received), the Requester proceeds, as usual, to match the incoming
    XID value to a waiting RPC Call.  The Requester terminates the RPC
@@ -771,20 +638,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
    transports that guarantee in-order delivery, meeting all the above
    requirements for NFS version 4.0 and 4.1.  See Section 4.2.1 of
    [I-D.ietf-nfsv4-rpcrdma-version-two] for more details.
-
-
-
-
-
-
-
-
-
-
-Lever                    Expires 7 January 2022                [Page 14]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
 
 5.7.2.  Retransmission and Keep-alive
 
@@ -835,13 +688,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
    extensions to an existing NFS version 4 minor version, as described
    in [RFC8178].
 
-
-
-Lever                    Expires 7 January 2022                [Page 15]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
-
 7.  Security Considerations
 
    RPC-over-RDMA version 2 supports all RPC security models, including
@@ -887,16 +733,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
    [RFC1833]  Srinivasan, R., "Binding Protocols for ONC RPC Version 2",
               RFC 1833, DOI 10.17487/RFC1833, August 1995,
               <https://www.rfc-editor.org/info/rfc1833>.
-
-
-
-
-
-
-Lever                    Expires 7 January 2022                [Page 16]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -947,13 +783,6 @@ Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
               Specification", RFC 5040, DOI 10.17487/RFC5040, October
               2007, <https://www.rfc-editor.org/info/rfc5040>.
 
-
-
-Lever                    Expires 7 January 2022                [Page 17]
-
-Internet-Draft           NFS on RPC-Over-RDMA V2               July 2021
-
-
    [RFC5041]  Shah, H., Pinkerton, J., Recio, R., and P. Culley, "Direct
               Data Placement over Reliable Transports", RFC 5041,
               DOI 10.17487/RFC5041, October 2007,
@@ -984,25 +813,3 @@ Author's Address
    United States of America
 
    Email: chuck.lever@oracle.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Lever                    Expires 7 January 2022                [Page 18]
