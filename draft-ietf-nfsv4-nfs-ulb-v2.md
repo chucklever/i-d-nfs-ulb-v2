@@ -117,32 +117,28 @@ modified client memory associated with that RPC.
 ## Reply Size Estimation
 
 During the construction of each RPC Call message, a Requester is
-responsible for allocating appropriate transport resources to receive
+responsible for allocating appropriate RDMA resources to receive
 the corresponding Reply message. These resources must be capable of
-holding the entire Reply, therefore the Requester needs to estimate
+holding the entire Reply. Therefore the Requester needs to estimate
 the maximum possible size of the expected Reply message.
 
-* In many cases, the expected Reply can fit in one or a few RDMA
+* Often, the expected Reply can fit in a limited number of RDMA
   Send messages. The Requester need not provision any RDMA
-  resources, relying instead on message continuation to handle the
-  entire Reply message.
-* In cases where the Requester deems direct data placement to be the
-  most efficient transfer mechanism, it provisions Write chunks
-  wherein the Responder can place results. In these cases, the
-  Requester must reliably estimate the maximum size of each result
-  that is to be placed in a Write chunk.
-* When the Requester expects an especially large Reply message, it
-  can provision a combination of a Reply chunk and Write chunks for
-  result data items. In such cases, the Requester must reliably
-  estimate the maximum size of each result that is to be placed in a
-  Write chunk and the maximum size of the remainder to be placed in
-  the Reply chunk.
+  resources for the Reply, relying instead on message continuation
+  to handle the entire Reply message.
+* In cases where the Upper Layer Binding permits direct data
+  placement of the results (DDP), a Requester can provision
+  Write chunks to receive those results. The Requester MUST reliably
+  estimate the maximum size of each result receive via a Write chunk.
+* A Requester that expects a large Reply message can provision
+  a Reply chunk. The Requester MUST reliably estimate the maximum
+  size of the payload received via the Reply chunk.
+* If RDMA resources are not available to send a Reply, a Responder
+  falls back to message continuation.
 
-A legacy NFS client needs to make every effort to avoid
-retransmission of non-idempotent NFS requests due to underestimated
-Reply resources. Thanks to the mechanism of message continuation in
-RPC-over-RDMA version 2, the need for such retransmission is greatly
-reduced.
+A correctly implemented Legacy NFS client thus avoids
+retransmission of non-idempotent NFS requests due to improperly
+estimated Reply resources.
 
 ## RPC Binding Considerations
 
