@@ -142,7 +142,7 @@ estimated Reply resources.
 
 ## RPC Binding Considerations
 
-Legacy NFS servers traditionally listen for clients on UDP and TCP
+Legacy NFS servers typically listen for clients on UDP and TCP
 port 2049. Additionally, they register these ports with a local
 portmapper service {{!RFC1833}}.
 
