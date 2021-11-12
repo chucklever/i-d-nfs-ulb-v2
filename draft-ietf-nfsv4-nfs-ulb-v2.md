@@ -55,12 +55,13 @@ Instructions are on that page.
 
 # Introduction
 
-The RPC-over-RDMA version 2 transport may employ direct data
+The RPC-over-RDMA version 2 transport can employ direct data
 placement to convey data payloads associated with RPC transactions,
-as described in {{I-D.ietf-nfsv4-rpcrdma-version-two}}. RPC client and
-server implementations using RPC-over-RDMA version 2 must agree which
-XDR data items and RPC procedures are eligible to use direct data
-placement (DDP) to ensure successful interoperation.
+as described in {{I-D.ietf-nfsv4-rpcrdma-version-two}}.
+As mandated by that document, RPC client and server implementations
+using RPC-over-RDMA version 2 MUST agree in advance which
+XDR data items and RPC procedures are eligible for direct data
+placement (DDP).
 
 An Upper-Layer Binding specifies this agreement for one or more
 versions of one RPC program. Other operational details, such as RPC
