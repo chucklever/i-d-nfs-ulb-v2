@@ -275,41 +275,35 @@ NFS version 4 minor versions are DDP-eligible:
 ### The NFSv4.2 READ_PLUS operation
 
 NFS version 4.2 introduces an enhanced READ operation called
-READ_PLUS {{!RFC7862}}. READ_PLUS enables an NFS server to perform data
-reduction of READ results so that the returned READ data is more
-compact.
+READ_PLUS {{!RFC7862}}. READ_PLUS enables an NFS server to
+compact returned READ data payloads.
 
 In a READ_PLUS result, returned file content appears as a list of one
 or more of the following items:
 
-* Regular data content: the same as the result of a traditional READ
-  operation.
-* Unallocated space in a file: where no data has yet been written or
+* Regular data content, the same as the result of a traditional READ
+  operation
+* Unallocated space in a file, where no data has been written, or
   previously-written data has been removed via a hole-punch
-  operation.
-* A counted pattern.
+  operation
+* A counted pattern
 
 Upon receipt of a READ_PLUS result, an NFSv4.2 client expands the
-returned list into the preferred local representation of the original
+returned list into its preferred representation of the original
 file content.
 
-Before receiving that result, an NFSv4.2 client typically does not
-know how the file's content is organized on the NFS server. Thus it
-is not possible to predict the size or structure of a READ_PLUS Reply
+Before receiving that result, an NFSv4.2 client is unaware of how
+the NFS server has organized the file content. Thus it is not
+possible to predict the size or structure of a READ_PLUS Reply
 in advance. The use of direct data placement is therefore
-challenging.
+challenging. Moreover, the usual benefits of hardware-assisted
+data placement are entirely lost if the client must
+parse the result of each READ I/O.
 
-A READ_PLUS content list containing more than one segment of regular
-file data could be conveyed using multiple Write chunks, but only if
-the client knows in advance where those chunks appear in the Reply
-Payload stream. Moreover, the usual benefits of hardware-assisted
-data placement are entirely waived if the client-side transport must
-parse the result of each read I/O.
-
-Therefore this Upper Layer Binding does not make any element of an
+Therefore this Upper Layer Binding does not make elements of an
 NFSv4.2 READ_PLUS Reply DDP-eligible. Further, this Upper Layer
-Binding recommends that implementations avoid the use of the
-READ_PLUS operation on NFS/RDMA mount points.
+Binding recommends that NFS client implemenations avoid using
+the READ_PLUS operation on NFS/RDMA mount points.
 
 ## Reply Size Estimation {#nfsv4-reply-size}
 
