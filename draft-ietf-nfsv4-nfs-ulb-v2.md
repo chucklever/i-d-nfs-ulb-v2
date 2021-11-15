@@ -492,11 +492,11 @@ messages to convey backchannel operations.
 ## Session-Related Considerations {#session-cons}
 
 The presence of an NFS version 4 session (as defined in {{RFC8881}})
-does not effect the operation of RPC-over-RDMA version 2. None of
+does not affect the operation of RPC-over-RDMA version 2. None of
 the operations introduced to support NFS sessions (e.g., the SEQUENCE
 operation) contain DDP-eligible data items. There is no need to
-match the number of session slots with the number of available RPC-
-over-RDMA version 2 credits.
+match the number of session slots with the available RPC-over-RDMA
+version 2 credits.
 
 However, there are a few new cases where an RPC transaction can fail.
 For example, a Requester might receive, in response to an RPC
@@ -513,8 +513,8 @@ XID value to a waiting RPC Call. The Requester terminates the RPC
 transaction and reports the result status to the RPC consumer. The
 Requester's session implementation then determines the session ID and
 slot for the failed request and performs slot recovery to make that
-slot usable again. Otherwise, that slot could be rendered
-permanently unavailable.
+slot usable again. Otherwise, that slot is rendered permanently
+unavailable.
 
 When an NFS session is not present (for example, when NFS version 4.0
 is in use), a transport error does not indicate whether the server
