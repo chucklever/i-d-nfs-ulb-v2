@@ -425,28 +425,9 @@ version 4 servers MUST accept and process all such requests.
 * The Write list can contain no more than one Write chunk.
 
 NFS version 4 clients wishing to send more complex chunk lists can
-provide configuration interfaces to bound the complexity of NFS
-version 4 COMPOUNDs, limit the number of elements in scatter-gather
-operations, and avoid other sources of chunk overruns at the
-receiving peer.
-
-If an NFS version 4 server receives an RPC request via RPC-over-RDMA
-version 2 that it cannot process due to chunk list complexity limits,
-it SHOULD return one of the following responses to the client:
-
-* A problem is detected by the transport layer while parsing the
-  transport header in an RPC Call message. The server responds with
-  an RDMA2_ERROR message with the err field set to ERR_CHUNK.
-* A problem is detected during XDR decoding of the RPC Call message
-  while the RPC layer reassembles the call's XDR stream. The server
-  responds with an RPC reply with its "reply_stat" field set to
-  MSG_ACCEPTED and its "accept_stat" field set to GARBAGE_ARGS.
-
-After receiving one of these errors, an NFS version 4 client SHOULD
-NOT retransmit the failing request, as the result would be the same
-error. It SHOULD terminate the RPC transaction associated with the
-XID in the reply without further processing, and report an error to
-the RPC consumer.
+use transport properties to bound the complexity of NFS version 4
+COMPOUNDs, limit the number of elements in scatter-gather operations,
+and avoid other sources of chunk overruns at the receiving peer.
 
 ### NFS Version 4 COMPOUND Example
 
@@ -528,7 +509,7 @@ over-RDMA version 2 credits.
 
 However, there are a few new cases where an RPC transaction can fail.
 For example, a Requester might receive, in response to an RPC
-request, an RDMA2_ERROR message with a rdma_err value of ERR_CHUNK.
+request, an RDMA2_ERROR message with a rdma_err value of RDMA2_ERR_BADXDR.
 These situations are not different from existing RPC errors, which an
 NFS session implementation can already handle for other transport
 types. Moreover, there might be no SEQUENCE result available to the
