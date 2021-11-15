@@ -208,9 +208,9 @@ request replay detection mechanism.
 # Upper-Layer Bindings for NFS Version 2 and 3 Auxiliary Protocols {#auxproto}
 
 Storage administrators typically deploy NFS versions 2 and 3 with
-several other protocols, sometimes referred to as the "NFS auxiliary
+several other protocols, sometimes called the "NFS auxiliary
 protocols." These are distinct RPC programs that define procedures
-that are not part of the NFS RPC program (100003). The Upper-Layer
+not part of the NFS RPC program (100003). The Upper-Layer
 Bindings in this section apply to:
 
 * Versions 2 and 3 of the MOUNT RPC program (100005) {{?RFC1813}}
@@ -218,23 +218,23 @@ Bindings in this section apply to:
 * Version 1 of the NSM RPC program (100024), described in Chapter 11
   of {{XNFS}}
 * Versions 2 and 3 of the NFSACL RPC program (100227). The NFSACL
-  program does not have a public definition. In this document it is
-  treated as a de facto standard, as there are several
+  program does not have a public definition. This document treats
+  the NFSACL program as a de facto standard, as there are several
   interoperating implementations.
 
 ## MOUNT, NLM, and NSM Protocols
 
-Historically, NFS/RDMA implementations have chosen to convey the
-MOUNT, NLM, and NSM protocols via TCP. A legacy NFS server
-implementation MUST provide support for these protocols via TCP to
-enable interoperation of these protocols when NFS/RDMA is in use.
+Historically, NFS/RDMA implementations have conveyed the
+MOUNT, NLM, and NSM protocols via TCP. A Legacy NFS server
+implementation MUST provide support for these auxiliary
+protocols via TCP.
 
 ## NFSACL Protocol
 
 Often legacy clients and servers that support the NFSACL RPC program
 convey NFSACL procedures on the same transport connection and port as
 the NFS RPC program (100003). Utilizing the same port obviates the
-need for separate a rpcbind query to discover server support for this
+need for a separate rpcbind query to discover server support for this
 RPC program.
 
 ACLs are typically small, but even large ACLs must be encoded and
