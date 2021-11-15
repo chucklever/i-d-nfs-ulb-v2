@@ -587,8 +587,8 @@ messages are sent without a credit update. In such cases:
 
 # Extending NFS Upper-Layer Bindings {#extending-ulbs}
 
-RPC programs such as NFS are required to have an Upper-Layer Binding
-specification to interoperate on RPC-over-RDMA version 2 transports
+RPC programs such as NFS must have an Upper-Layer Binding
+specification to operate on an RPC-over-RDMA version 2 transport
 {{I-D.ietf-nfsv4-rpcrdma-version-two}}. Via standards action, the
 Upper-Layer Binding specified in this document can be extended to
 cover versions of the NFS version 4 protocol specified after NFS
