@@ -276,7 +276,8 @@ NFS version 4 minor versions are DDP-eligible:
 
 NFS version 4.2 introduces an enhanced READ operation called
 READ_PLUS {{!RFC7862}}. READ_PLUS enables an NFS server to
-compact returned READ data payloads.
+compact returned READ data payloads. No part of a READ_PLUS
+Reply is DDP-eligible.
 
 In a READ_PLUS result, returned file content appears as a list of one
 or more of the following items:
