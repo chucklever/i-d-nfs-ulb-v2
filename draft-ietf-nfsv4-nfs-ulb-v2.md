@@ -235,22 +235,24 @@ an Upper-Layer binding for them.
 
 ## NFSACL Protocol
 
-Often legacy clients and servers that support the NFSACL RPC program
-convey NFSACL procedures on the same transport connection and port as
-the NFS RPC program (100003). Utilizing the same port obviates the
-need for a separate rpcbind query to discover server support for this
-RPC program.
+Legacy NFS clients and servers convey NFSACL procedures on the same
+transport connection and port as the NFS RPC program (100003).
+Utilizing the same port obviates the need for a separate rpcbind
+query to discover server support for this RPC program.
 
 ACLs are typically small, but even large ACLs must be encoded and
-decoded to some degree before being made available to users. Thus no
-data item in this Upper-Layer Protocol is DDP-eligible.
+decoded to some degree before being being stored in local filesystems.
+Thus no data item in this Upper-Layer Protocol is DDP-eligible.
 
 For procedures whose replies do not include an ACL object, the size
-of a reply is determined directly from the NFSACL RPC program's XDR
-definition. However, legacy client implementations should choose a
-maximum size for ACLs based on internal limits, and can rely on
-message continuation to handle the a priori unknown size of large ACL
-objects in Replies.
+of each Reply is determined directly from the NFSACL RPC program's XDR
+definition.
+
+The NFSACL protocol does not provide a mechanism to determine the size
+of a received ACL in advance. When preparing for responses that include
+ACLs, Legacy NFS clients estimate a maximum reply size based on limits
+within their local file systems. If that estimation is inadequate, a
+Responder falls back to message continuation.
 
 # Upper-Layer Binding For NFS Version 4
 
