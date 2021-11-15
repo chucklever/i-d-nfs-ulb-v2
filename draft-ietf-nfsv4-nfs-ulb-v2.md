@@ -159,11 +159,12 @@ port 2049. Additionally, they register these ports with a local
 portmapper service {{!RFC1833}}.
 
 A Legacy NFS server supporting RPC-over-RDMA version 2 and
-registering itself with the RPC portmapper MAY choose an arbitrary
-port, or MAY use the alternative well-known port number for its RPC-
-over-RDMA service (see Section 8). The chosen port MAY be registered
-with the RPC portmapper using the netids assigned in {{Section 12 of
-I-D.ietf-nfsv4-rpcrdma-version-two}}.
+registering itself with the RPC portmapper MAY choose an arbitrary port
+or MAY use the alternative well-known port number for its RPC-over-RDMA
+service (see {{iana-cons}}).
+The chosen port MAY be registered with the RPC portmapper
+using the netids assigned in
+{{Section 12 of I-D.ietf-nfsv4-rpcrdma-version-two}}.
 
 ## Transport Considerations
 
@@ -323,7 +324,7 @@ NFSv4.2 READ_PLUS Reply DDP-eligible. Further, this Upper Layer
 Binding recommends that implementations avoid the use of the
 READ_PLUS operation on NFS/RDMA mount points.
 
-## Reply Size Estimation
+## Reply Size Estimation {#nfsv4-reply-size}
 
 Within NFS version 4, there are certain variable-length result data
 items whose maximum size cannot be estimated by clients reliably
@@ -346,12 +347,13 @@ arrays. These include:
 The NFS version 4.0 protocol itself does not impose any bound on the
 size of NFS calls or replies.
 
-Some of the data items enumerated in Section 5.2 (in particular, the
-items related to ACLs and fs_locations) make it difficult to predict
-the maximum size of NFS version 4.0 replies that interrogate
-variable-length fattr4 attributes. Client implementations might rely
-upon internal architectural limits to constrain the reply size, but
-such limits are not always guaranteed to be reliable.
+Some of the data items enumerated in {{nfsv4-reply-size}}
+(in particular, the items related to ACLs and fs_locations)
+make it difficult to predict the maximum size of NFS version 4.0
+replies that interrogate variable-length fattr4 attributes.
+Client implementations might rely upon internal architectural limits
+to constrain the reply size, but such limits are not always
+guaranteed to be reliable.
 
 When an NFS version 4.0 client expects an especially sizeable fattr4
 result, it can rely on message continuation or provision a Reply
@@ -376,7 +378,7 @@ NFS version 4 servers are required to listen on TCP port 2049, and
 are not required to register with an rpcbind service {{RFC7530}}.
 Therefore, an NFS version 4 server supporting RPC-over-RDMA version 2
 MUST use the alternative well-known port number for its RPC-over-RDMA
-service (see Section 8; Clients SHOULD connect to this well-known port
+service (see {{iana-cons}}; Clients SHOULD connect to this well-known port
 without consulting the RPC portmapper (as for NFS version 4 on TCP
 transports).
 
@@ -424,7 +426,7 @@ An NFS version 4 server acts as follows:
   remaining NFS Read operations in an NFS version 4 COMPOUND that
   have no matching Write chunk MUST return their results inline.
 
-### Chunk List Complexity
+### Chunk List Complexity {#chunk-list-cmplx}
 
 By default, the RPC-over-RDMA version 2 protocol places limits on the
 number of chunks or segments that may appear in Read or Write lists
@@ -540,7 +542,7 @@ larger than the connection's inline thresholds. Otherwise, an NFS
 version 4 server MUST use only Short messages to convey backchannel
 operations.
 
-## Session-Related Considerations
+## Session-Related Considerations {#session-cons}
 
 The presence of an NFS version 4 session (as defined in {{RFC8881}})
 does not effect the operation of RPC-over-RDMA version 2. None of
@@ -638,7 +640,7 @@ In such cases:
   no other response for a request, then only the NFS version 4 rules
   for handling retransmission apply.
 
-# Extending NFS Upper-Layer Bindings
+# Extending NFS Upper-Layer Bindings {#extending-ulbs}
 
 RPC programs such as NFS are required to have an Upper-Layer Binding
 specification to interoperate on RPC-over-RDMA version 2 transports
@@ -660,7 +662,7 @@ of the NFS protocols atop RPC-over-RDMA version 2
 {{I-D.ietf-nfsv4-rpcrdma-version-two}}, all relevant security
 considerations are, therefore, described at that layer.
 
-# IANA Considerations
+# IANA Considerations {#iana-cons}
 
 The use of direct data placement in NFS introduces a need for an
 additional port number assignment for networks that share traditional
@@ -687,9 +689,9 @@ assignments.
 # Acknowledgments
 {: numbered="no"}
 
-Thanks to Tom Talpey, who contributed the text of Section 5.4.2.
-David Noveck contributed the text of Section 5.6 and Section 6. The
-author also wishes to thank Bill Baker and Greg Marsden for their
+Thanks to Tom Talpey, who contributed the text of {{chunk-list-cmplx}}.
+David Noveck contributed the text of {{session-cons}} and {{extending-ulbs}}.
+The author also wishes to thank Bill Baker and Greg Marsden for their
 support of this work.
 
 Special thanks go to Transport Area Directors Zaheduzzaman Sarker,
