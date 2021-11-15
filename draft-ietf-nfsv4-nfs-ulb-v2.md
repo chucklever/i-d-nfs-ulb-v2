@@ -452,16 +452,16 @@ delegations.
 
 ### NFS Version 4.0 Callback
 
-An NFS version 4.0 client uses the SETCLIENTID operation to advertise
+An NFS version 4.0 client uses the SETCLIENTID operation for advertising
 the IP address, port, and netid of its NFS version 4.0 callback
 service. When an NFS version 4.0 server provides a backchannel
 service to an NFS version 4.0 client that uses RPC-over-RDMA version
 2 for its forward channel, the server MUST advertise the backchannel
 service using either the "tcp" or "tcp6" netid.
 
-Because the backchannel does not operate on RPC-over-RDMA, no XDR
-data item in the NFS version 4.0 callback RPC program is DDP-
-eligible.
+Because the NFSv4.0 backchannel does not operate on RPC-over-RDMA,
+this document does not specify an Upper-Layer binding
+for the NFSv4.0 backchannel RPC program.
 
 ### NFS Version 4.1 Callback
 
