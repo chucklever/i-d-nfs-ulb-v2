@@ -306,7 +306,7 @@ NFSv4.2 READ_PLUS Reply DDP-eligible. Further, this Upper Layer
 Binding recommends that NFS client implemenations avoid using
 the READ_PLUS operation on NFS/RDMA mount points.
 
-## Reply Size Estimation {#nfsv4-reply-size}
+## Reply Size Estimation
 
 Within NFS version 4, there are certain variable-length result data
 items whose maximum size cannot be estimated by clients reliably
@@ -324,19 +324,15 @@ arrays. These include:
 ### Reply Size Estimation for Minor Version 0
 
 The NFS version 4.0 protocol itself does not impose any bound on the
-size of NFS calls or replies.
+size of NFS Calls or Replies.
 
-Some of the data items enumerated in {{nfsv4-reply-size}}
-(in particular, the items related to ACLs and fs_locations)
-make it difficult to predict the maximum size of NFS version 4.0
-replies that interrogate variable-length fattr4 attributes.
+Variable-length fattr4 attributes make it particularly difficult for
+clients to predict the maximum size of some NFS version 4.0 Replies.
 Client implementations might rely upon internal architectural limits
-to constrain the reply size, but such limits are not always
-guaranteed to be reliable.
-
-When an NFS version 4.0 client expects an especially sizeable fattr4
-result, it can rely on message continuation or provision a Reply
-chunk to enable that server to return that result via explicit RDMA.
+to constrain the reply size, but such limits are not always reliable.
+When an NFS version 4.0 client cannot predict the size of a Reply,
+it can rely on message continuation to enable a Reply under any
+circumstances.
 
 ### Reply Size Estimation for Minor Version 1 and Newer
 
