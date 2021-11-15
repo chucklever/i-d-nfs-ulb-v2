@@ -419,8 +419,8 @@ these limits, NFS version 4 clients SHOULD follow the prescriptions
 listed below when constructing RPC-over-RDMA version 2 messages. NFS
 version 4 servers MUST accept and process all such requests.
 
-* The Read list can contain either a Position-Zero Read chunk, one
-  Read chunk with a non-zero Position, or both.
+* The Read list can contain either a Call chunk, no more than one
+  Read chunk, or both a Call chunk and one Read chunk.
 * The Write list can contain no more than one Write chunk.
 
 NFS version 4 clients wishing to send more complex chunk lists can
