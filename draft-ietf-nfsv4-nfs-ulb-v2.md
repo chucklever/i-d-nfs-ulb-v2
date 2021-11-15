@@ -486,8 +486,8 @@ message in this situation.
 When an NFS version 4.1 client can support Special Payload Calls in
 its backchannel, it reports a backchannel ca_maxrequestsize that is
 larger than the connection's inline thresholds. Otherwise, an NFS
-version 4 server MUST use only Simple Payload messages to convey
-backchannel operations.
+version 4 server MUST use only Simple Payload or Continued Payload
+messages to convey backchannel operations.
 
 ## Session-Related Considerations {#session-cons}
 
