@@ -621,8 +621,8 @@ considerations are, therefore, described at that layer.
 
 The use of direct data placement in NFS introduces a need for an
 additional port number assignment for networks that share traditional
-UDP and TCP port spaces with RDMA services. The iWARP protocol is
-such an example {{?RFC5040}} {{?RFC5041}}.
+UDP and TCP port spaces with RDMA services. The DDP protocol
+is such an example {{?RFC5041}}.
 
 For this purpose, the current document specifies a set of transport
 protocol port number assignments. IANA has assigned the following
