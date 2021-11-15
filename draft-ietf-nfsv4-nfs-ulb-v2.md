@@ -257,8 +257,10 @@ Responder falls back to message continuation.
 # Upper-Layer Binding For NFS Version 4
 
 The Upper-Layer Binding specification in this section applies to
-versions of the NFS RPC program defined in NFS version 4.0 {{RFC7530}}
-NFS version 4.1 {{RFC8881}} and NFS version 4.2 {{!RFC7862}}.
+versions of the NFS RPC program defined in
+NFS version 4.0 {{RFC7530}},
+NFS version 4.1 {{RFC8881}},
+and NFS version 4.2 {{!RFC7862}}.
 
 ## DDP-Eligibility
 
