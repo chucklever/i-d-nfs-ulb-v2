@@ -349,13 +349,11 @@ and security labels are much smaller than this maximum.
 
 ## RPC Binding Considerations
 
-NFS version 4 servers are required to listen on TCP port 2049, and
+NFS version 4 servers are required to listen on TCP port 2049 and
 are not required to register with an rpcbind service {{RFC7530}}.
 Therefore, an NFS version 4 server supporting RPC-over-RDMA version 2
 MUST use the alternative well-known port number for its RPC-over-RDMA
-service (see {{iana-cons}}; Clients SHOULD connect to this well-known port
-without consulting the RPC portmapper (as for NFS version 4 on TCP
-transports).
+service defined in {{iana-cons}}.
 
 ## NFS COMPOUND Requests
 
