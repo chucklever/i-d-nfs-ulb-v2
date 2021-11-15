@@ -446,7 +446,7 @@ indicate that the READLINK result must be returned inline.
 
 ## NFS Callback Requests
 
-The NFS version 4 family of protocols support server-initiated
+The NFS version 4 family of protocols supports server-initiated
 callbacks to notify NFS version 4 clients of events such as recalled
 delegations.
 
