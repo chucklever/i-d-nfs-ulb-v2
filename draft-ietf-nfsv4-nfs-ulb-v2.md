@@ -614,10 +614,10 @@ additional port number assignment for networks that share traditional
 UDP and TCP port spaces with RDMA services. The DDP protocol
 is such an example {{?RFC5041}}.
 
-For this purpose, the current document specifies a set of transport
-protocol port number assignments. IANA has assigned the following
-ports for NFS/RDMA in the IANA port registry, according to the
-guidelines described in {{!RFC6335}}.
+For this purpose, the current document lists a set of port number
+assignments that IANA has already assigned for NFS/RDMA
+in the IANA port registry,
+according to the guidelines described in {{!RFC6335}}.
 
 ~~~
   nfsrdma 20049/tcp Network File System (NFS) over RDMA
@@ -625,9 +625,9 @@ guidelines described in {{!RFC6335}}.
   nfsrdma 20049/sctp Network File System (NFS) over RDMA
 ~~~
 
-The current document should be added as a reference for the nfsrdma
-port assignments. The current document does not alter these
-assignments.
+The author requests that IANA add the current document as a reference
+for the existing nfsrdma port assignments. This document does not alter
+these assignments.
 
 --- back
 
