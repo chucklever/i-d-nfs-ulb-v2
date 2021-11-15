@@ -552,10 +552,10 @@ See {{Section 4.2.1 of I-D.ietf-nfsv4-rpcrdma-version-two}} for more details.
 ### Retransmission and Keep-alive
 
 NFS version 4 client implementations often rely on a transport-layer
-keep-alive mechanism to detect when an NFS version 4 server has
-become unresponsive. When an NFS server is no longer responsive,
-client-side keep-alive terminates the connection, which in turn
-triggers reconnection and RPC retransmission.
+connection keep-alive mechanism to detect when an NFS version 4 server
+has become unresponsive. When an NFS server is no longer responsive,
+client-side keep-alive terminates the connection, triggering
+reconnection and RPC retransmission.
 
 Some RDMA transports (such as the Reliable Connected QP type on
 InfiniBand) have no keep-alive mechanism. Without a disconnect or
@@ -565,21 +565,20 @@ available RPC-over-RDMA version 2 credits on that transport
 connection, it indefinitely awaits a reply before sending another RPC
 request.
 
-NFS version 4 clients SHOULD reserve one RPC-over-RDMA version 2
-credit to use for periodic server or connection health assessment.
+NFS version 4 peers SHOULD reserve one RPC-over-RDMA version 2
+credit for periodic server or connection health assessment.
 Either peer can use this credit to drive an RPC request on an
 otherwise idle connection, triggering either a quick affirmative
 server response or immediate connection termination.
 
-In addition to network partition and request loss scenarios, RPC-
-over-RDMA version 2 transport connections can be terminated when a
-Transport header is malformed, Reply messages exceed receive
-resources, or when too many RPC-over-RDMA messages are sent at once.
-In such cases:
+In addition to network partition and request loss scenarios,
+RPC-over-RDMA version 2 peers can terminate a connection when a
+Transport header is malformed or when too many RPC-over-RDMA
+messages are sent without a credit update. In such cases:
 
 * If a transport error occurs (e.g., an RDMA2_ERROR type message is
-  received) before the disconnect or instead of a disconnect, the
-  Requester MUST respond to that error as prescribed by the
+  received) just before the disconnect or instead of a disconnect,
+  the Requester MUST respond to that error as prescribed by the
   specification of the RPC transport. Then the NFS version 4 rules
   for handling retransmission apply.
 * If there is a transport disconnect and the Responder has provided
