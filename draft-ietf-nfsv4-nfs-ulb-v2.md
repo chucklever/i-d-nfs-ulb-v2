@@ -396,21 +396,20 @@ An NFS version 4 server acts as follows:
 
 ### Chunk List Complexity {#chunk-list-cmplx}
 
-By default, the RPC-over-RDMA version 2 protocol places limits on the
+By default, the RPC-over-RDMA version 2 protocol limits the
 number of chunks or segments that may appear in Read or Write lists
 (see {{Section 5.2 of I-D.ietf-nfsv4-rpcrdma-version-two}}).
 
-These implementation limits are especially important when Kerberos
+These implementation limits are significant when Kerberos
 integrity or privacy is in use {{!RFC7861}}. GSS services increase the
 size of credential material in RPC headers, potentially requiring the
-use of a Special Payload message, which increases the complexity of
-chunk lists independent of the particular NFS version 4 COMPOUND
-being conveyed.
+more frequent use of less efficient Special Payload or
+Continued Payload messages.
 
-In the absence of an explicit transport property exchange that alters
-these limits, NFS version 4 clients SHOULD follow the prescriptions
-listed below when constructing RPC-over-RDMA version 2 messages. NFS
-version 4 servers MUST accept and process all such requests.
+NFS version 4 clients follow the prescriptions listed below when
+constructing RPC-over-RDMA version 2 messages in the absence of an
+explicit transport property exchange that alters these limits.
+NFS version 4 servers MUST accept and process all such requests.
 
 * The Read list can contain either a Call chunk, no more than one
   Read chunk, or both a Call chunk and one Read chunk.
@@ -441,7 +440,7 @@ compound request (READ and READLINK) back to each chunk.
                    A                   B                   C
 ~~~
 
-If the NFS version 4 client does not want to have the READLINK result
+If the NFS version 4 client does not want the READLINK result
 returned via RDMA, it provides an empty Write chunk for buffer B to
 indicate that the READLINK result must be returned inline.
 
