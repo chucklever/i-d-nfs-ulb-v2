@@ -229,6 +229,10 @@ MOUNT, NLM, and NSM protocols via TCP. A Legacy NFS server
 implementation MUST provide support for these auxiliary
 protocols via TCP.
 
+Moreover, there is little benefit from transporting these
+protocols via RDMA. Thus this document does not provide
+an Upper-Layer binding for them.
+
 ## NFSACL Protocol
 
 Often legacy clients and servers that support the NFSACL RPC program
