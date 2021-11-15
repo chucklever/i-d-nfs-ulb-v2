@@ -362,25 +362,24 @@ service defined in {{iana-cons}}.
 An NFS version 4 COMPOUND procedure can contain more than one
 operation that carries a DDP-eligible data item. An NFS version 4
 client provides XDR Position values in each Read chunk to
-disambiguate which chunk is associated with which argument data item.
+determine which chunk is associated with which argument data item.
 However, NFS version 4 server and client implementations must agree
-in advance on how to pair Write chunks with returned result data
-items.
+on how to pair Write chunks with returned result data items.
 
-In the following lists, a "READ operation" refers to any NFS version
-4 operation that has a DDP-eligible result data item. An NFS version
-4 client applies the mechanism specified in {{Section 4.3.2 of
-I-D.ietf-nfsv4-rpcrdma-version-two}} to this class of operations as
-follows:
+A "READ operation" refers to any NFS version 4 operation
+with a DDP-eligible result data item in the following lists.
+An NFS version 4 client applies the mechanism specified in
+{{Section 4.3.2 of I-D.ietf-nfsv4-rpcrdma-version-two}}
+to this class of operations as follows:
 
 * If an NFS version 4 client wishes all DDP-eligible items in an NFS
   reply to be conveyed inline, it leaves the Write list empty.
 
 An NFS version 4 server acts as follows:
 
-* The first chunk in the Write list MUST be used by the first READ
-  operation in an NFS version 4 COMPOUND procedure. The next Write
-  chunk is used by the next READ operation, and so on.
+* The first READ operation MUST use the first chunk in the Write list
+  in an NFS version 4 COMPOUND procedure. The next READ operation uses
+  the next Write chunk, and so on.
 * If an NFS version 4 client has provided a matching non-empty Write
   chunk, then the corresponding READ operation MUST return its DDP-
   eligible data item using that chunk.
