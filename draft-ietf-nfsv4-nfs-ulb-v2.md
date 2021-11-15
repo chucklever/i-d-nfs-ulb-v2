@@ -411,8 +411,9 @@ number of chunks or segments that may appear in Read or Write lists
 These implementation limits are especially important when Kerberos
 integrity or privacy is in use {{!RFC7861}}. GSS services increase the
 size of credential material in RPC headers, potentially requiring the
-use of a Long message, which increases the complexity of chunk lists
-independent of the particular NFS version 4 COMPOUND being conveyed.
+use of a Special Payload message, which increases the complexity of
+chunk lists independent of the particular NFS version 4 COMPOUND
+being conveyed.
 
 In the absence of an explicit transport property exchange that alters
 these limits, NFS version 4 clients SHOULD follow the prescriptions
@@ -507,14 +508,14 @@ NFS version 4 client.
 There are no DDP-eligible data items in callback procedures defined
 in NFS version 4.1 or NFS version 4.2. However, some callback
 operations, such as messages that convey device ID information, can
-be sizeable. A sender can use Message Continuation or a Long message
-in this situation.
+be sizeable. A sender can use Message Continuation or a Special Payload
+message in this situation.
 
-When an NFS version 4.1 client can support Long Calls in its
-backchannel, it reports a backchannel ca_maxrequestsize that is
+When an NFS version 4.1 client can support Special Payload Calls in
+its backchannel, it reports a backchannel ca_maxrequestsize that is
 larger than the connection's inline thresholds. Otherwise, an NFS
-version 4 server MUST use only Short messages to convey backchannel
-operations.
+version 4 server MUST use only Simple Payload messages to convey
+backchannel operations.
 
 ## Session-Related Considerations {#session-cons}
 
