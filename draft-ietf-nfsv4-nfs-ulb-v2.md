@@ -72,13 +72,9 @@ specified in Appendix A of {{I-D.ietf-nfsv4-rpcrdma-version-two}}, for
 the following NFS protocol versions:
 
 * NFS version 2 {{?RFC1094}}
-
 * NFS version 3 {{?RFC1813}}
-
 * NFS version 4.0 {{RFC7530}}
-
 * NFS version 4.1 {{RFC8881}}
-
 * NFS version 4.2 {{!RFC7862}}
 
 The current document also provides Upper-Layer Bindings for auxiliary
@@ -105,11 +101,8 @@ The following XDR data items in NFS versions 2 and 3 are DDP-
 eligible:
 
 * The opaque file data argument in the NFS WRITE procedure
-
 * The pathname argument in the NFS SYMLINK procedure
-
 * The opaque file data result in the NFS READ procedure
-
 * The pathname result in the NFS READLINK procedure
 
 All other argument or result data items in NFS versions 2 and 3 are
@@ -132,13 +125,11 @@ the maximum possible size of the expected Reply message.
   Send messages. The Requester need not provision any RDMA
   resources, relying instead on message continuation to handle the
   entire Reply message.
-
 * In cases where the Requester deems direct data placement to be the
   most efficient transfer mechanism, it provisions Write chunks
   wherein the Responder can place results. In these cases, the
   Requester must reliably estimate the maximum size of each result
   that is to be placed in a Write chunk.
-
 * When the Requester expects an especially large Reply message, it
   can provision a combination of a Reply chunk and Write chunks for
   result data items. In such cases, the Requester must reliably
@@ -227,12 +218,9 @@ that are not part of the NFS RPC program (100003). The Upper-Layer
 Bindings in this section apply to:
 
 * Versions 2 and 3 of the MOUNT RPC program (100005) {{?RFC1813}}
-
 * Versions 1, 3, and 4 of the NLM RPC program (100021) {{?RFC1813}}
-
 * Version 1 of the NSM RPC program (100024), described in Chapter 11
   of {{XNFS}}
-
 * Versions 2 and 3 of the NFSACL RPC program (100227). The NFSACL
   program does not have a public definition. In this document it is
   treated as a de facto standard, as there are several
@@ -276,11 +264,8 @@ Only the following XDR data items in the COMPOUND procedure of all
 NFS version 4 minor versions are DDP-eligible:
 
 * The opaque data field in the WRITE4args structure
-
 * The linkdata field of the NF4LNK arm in the createtype4 union
-
 * The opaque data field in the READ4resok structure
-
 * The linkdata field in the READLINK4resok structure
 
 ### The NFSv4.2 READ_PLUS operation
@@ -295,11 +280,9 @@ or more of the following items:
 
 * Regular data content: the same as the result of a traditional READ
   operation.
-
 * Unallocated space in a file: where no data has yet been written or
   previously-written data has been removed via a hole-punch
   operation.
-
 * A counted pattern.
 
 Upon receipt of a READ_PLUS result, an NFSv4.2 client expands the
@@ -332,12 +315,9 @@ because there is no protocol-specified size limit on these result
 arrays. These include:
 
 * The attrlist4 field
-
 * Fields containing ACLs such as fattr4_acl, fattr4_dacl, and
   fattr4_sacl
-
 * Fields in the fs_locations4 and fs_locations_info4 data structures
-
 * Fields which pertain to pNFS layout metadata, such as loc_body,
   loh_body, da_addr_body, lou_body, lrf_body, fattr_layout_types,
   and fs_layout_types
@@ -408,20 +388,16 @@ An NFS version 4 server acts as follows:
 * The first chunk in the Write list MUST be used by the first READ
   operation in an NFS version 4 COMPOUND procedure. The next Write
   chunk is used by the next READ operation, and so on.
-
 * If an NFS version 4 client has provided a matching non-empty Write
   chunk, then the corresponding READ operation MUST return its DDP-
   eligible data item using that chunk.
-
 * If an NFS version 4 client has provided an empty matching Write
   chunk, then the corresponding READ operation MUST return all of
   its result data items inline.
-
 * If a READ operation returns a union arm which does not contain a
   DDP-eligible result, and the NFS version 4 client has provided a
   matching non-empty Write chunk, an NFS version 4 server MUST
   return an empty Write chunk in that Write list position.
-
 * If there are more READ operations than Write chunks, then
   remaining NFS Read operations in an NFS version 4 COMPOUND that
   have no matching Write chunk MUST return their results inline.
@@ -445,7 +421,6 @@ version 4 servers MUST accept and process all such requests.
 
 * The Read list can contain either a Position-Zero Read chunk, one
   Read chunk with a non-zero Position, or both.
-
 * The Write list can contain no more than one Write chunk.
 
 NFS version 4 clients wishing to send more complex chunk lists can
@@ -461,7 +436,6 @@ it SHOULD return one of the following responses to the client:
 * A problem is detected by the transport layer while parsing the
   transport header in an RPC Call message. The server responds with
   an RDMA2_ERROR message with the err field set to ERR_CHUNK.
-
 * A problem is detected during XDR decoding of the RPC Call message
   while the RPC layer reassembles the call's XDR stream. The server
   responds with an RPC reply with its "reply_stat" field set to
@@ -635,7 +609,6 @@ In such cases:
   Requester MUST respond to that error as prescribed by the
   specification of the RPC transport. Then the NFS version 4 rules
   for handling retransmission apply.
-
 * If there is a transport disconnect and the Responder has provided
   no other response for a request, then only the NFS version 4 rules
   for handling retransmission apply.
