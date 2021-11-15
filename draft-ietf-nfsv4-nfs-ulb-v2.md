@@ -109,9 +109,9 @@ eligible:
 All other argument or result data items in NFS versions 2 and 3 are
 not DDP-eligible.
 
-Whether or not an NFS operation is considered non-idempotent, a
-transport error might not indicate whether the server has processed
-the arguments of the RPC Call, or whether the server has accessed or
+Regardless of whether an NFS operation is considered non-idempotent,
+a transport error might not indicate whether the server has processed
+the arguments of the RPC Call or whether the server has accessed or
 modified client memory associated with that RPC.
 
 ## Reply Size Estimation
