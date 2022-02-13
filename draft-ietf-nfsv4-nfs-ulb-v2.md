@@ -357,6 +357,70 @@ Therefore, an NFS version 4 server supporting RPC-over-RDMA version 2
 MUST use the alternative well-known port number for its RPC-over-RDMA
 service defined in {{iana-cons}}.
 
+## Transport Considerations
+
+### Congestion Avoidance
+
+{{Section 3.1 of RFC7530}} states:
+
+> Where an NFS version 4 implementation supports operation over the
+> IP network protocol, the supported transport layer between NFS and
+> IP MUST be an IETF standardized transport protocol that is
+> specified to avoid network congestion; such transports include TCP
+> and the Stream Control Transmission Protocol (SCTP).
+
+{{Section 2.9.1 of RFC8881}} further states:
+
+> Even if NFS version 4.1 is used over a non-IP network protocol, it
+> is RECOMMENDED that the transport support congestion control.
+>
+> It is permissible for a connectionless transport to be used under
+> NFS version 4.1; however, reliable and in-order delivery of data
+> combined with congestion control by the connectionless transport
+> is REQUIRED. As a consequence, UDP by itself MUST NOT be used as
+> an NFS version 4.1 transport.
+
+RPC-over-RDMA version 2 utilizes only reliable, connection-oriented
+transports that guarantee in-order delivery, meeting all the above
+requirements for NFS version 4.0 and 4.1.
+See {{Section 4.2.1 of I-D.ietf-nfsv4-rpcrdma-version-two}} for more details.
+
+### Retransmission and Keep-alive
+
+NFS version 4 client implementations often rely on a transport-layer
+connection keep-alive mechanism to detect when an NFS version 4 server
+has become unresponsive. When an NFS server is no longer responsive,
+client-side keep-alive terminates the connection, triggering
+reconnection and RPC retransmission.
+
+Some RDMA transports (such as the Reliable Connected QP type on
+InfiniBand) have no keep-alive mechanism. Without a disconnect or
+new RPC traffic, such connections can remain alive long after an NFS
+server has become unresponsive. Once an NFS client has consumed all
+available RPC-over-RDMA version 2 credits on that transport
+connection, it indefinitely awaits a reply before sending another RPC
+request.
+
+NFS version 4 peers SHOULD reserve one RPC-over-RDMA version 2
+credit for periodic server or connection health assessment.
+Either peer can use this credit to drive an RPC request on an
+otherwise idle connection, triggering either a quick affirmative
+server response or immediate connection termination.
+
+In addition to network partition and request loss scenarios,
+RPC-over-RDMA version 2 peers can terminate a connection when a
+Transport header is malformed or when too many RPC-over-RDMA
+messages are sent without a credit update. In such cases:
+
+* If a transport error occurs (e.g., an RDMA2_ERROR type message is
+  received) just before the disconnect or instead of a disconnect,
+  the Requester MUST respond to that error as prescribed by the
+  specification of the RPC transport. Then the NFS version 4 rules
+  for handling retransmission apply.
+* If there is a transport disconnect and the Responder has provided
+  no other response for a request, then only the NFS version 4 rules
+  for handling retransmission apply.
+
 ## NFS COMPOUND Requests
 
 ### Multiple DDP-eligible Data Items
@@ -522,70 +586,6 @@ When an NFS session is not present (for example, when NFS version 4.0
 is in use), a transport error does not indicate whether the server
 has processed the arguments of the RPC Call, or whether the server
 has accessed or modified client memory associated with that RPC.
-
-## Transport Considerations
-
-### Congestion Avoidance
-
-{{Section 3.1 of RFC7530}} states:
-
-> Where an NFS version 4 implementation supports operation over the
-> IP network protocol, the supported transport layer between NFS and
-> IP MUST be an IETF standardized transport protocol that is
-> specified to avoid network congestion; such transports include TCP
-> and the Stream Control Transmission Protocol (SCTP).
-
-{{Section 2.9.1 of RFC8881}} further states:
-
-> Even if NFS version 4.1 is used over a non-IP network protocol, it
-> is RECOMMENDED that the transport support congestion control.
->
-> It is permissible for a connectionless transport to be used under
-> NFS version 4.1; however, reliable and in-order delivery of data
-> combined with congestion control by the connectionless transport
-> is REQUIRED. As a consequence, UDP by itself MUST NOT be used as
-> an NFS version 4.1 transport.
-
-RPC-over-RDMA version 2 utilizes only reliable, connection-oriented
-transports that guarantee in-order delivery, meeting all the above
-requirements for NFS version 4.0 and 4.1.
-See {{Section 4.2.1 of I-D.ietf-nfsv4-rpcrdma-version-two}} for more details.
-
-### Retransmission and Keep-alive
-
-NFS version 4 client implementations often rely on a transport-layer
-connection keep-alive mechanism to detect when an NFS version 4 server
-has become unresponsive. When an NFS server is no longer responsive,
-client-side keep-alive terminates the connection, triggering
-reconnection and RPC retransmission.
-
-Some RDMA transports (such as the Reliable Connected QP type on
-InfiniBand) have no keep-alive mechanism. Without a disconnect or
-new RPC traffic, such connections can remain alive long after an NFS
-server has become unresponsive. Once an NFS client has consumed all
-available RPC-over-RDMA version 2 credits on that transport
-connection, it indefinitely awaits a reply before sending another RPC
-request.
-
-NFS version 4 peers SHOULD reserve one RPC-over-RDMA version 2
-credit for periodic server or connection health assessment.
-Either peer can use this credit to drive an RPC request on an
-otherwise idle connection, triggering either a quick affirmative
-server response or immediate connection termination.
-
-In addition to network partition and request loss scenarios,
-RPC-over-RDMA version 2 peers can terminate a connection when a
-Transport header is malformed or when too many RPC-over-RDMA
-messages are sent without a credit update. In such cases:
-
-* If a transport error occurs (e.g., an RDMA2_ERROR type message is
-  received) just before the disconnect or instead of a disconnect,
-  the Requester MUST respond to that error as prescribed by the
-  specification of the RPC transport. Then the NFS version 4 rules
-  for handling retransmission apply.
-* If there is a transport disconnect and the Responder has provided
-  no other response for a request, then only the NFS version 4 rules
-  for handling retransmission apply.
 
 # Extending NFS Upper-Layer Bindings {#extending-ulbs}
 
