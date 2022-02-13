@@ -98,6 +98,8 @@ version 2 or version 3 of the NFS RPC program (100003) to communicate
 with an NFS server. Likewise, a "Legacy NFS server" is an NFS server
 communicating with clients using NFS version 2 or NFS version 3.
 
+## DDP-Eligibility
+
 The following XDR data items in NFS versions 2 and 3 are DDP-
 eligible:
 
