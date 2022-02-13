@@ -308,6 +308,95 @@ NFSv4.2 READ_PLUS Reply DDP-eligible. Further, this Upper Layer
 Binding recommends that NFS client implemenations avoid using
 the READ_PLUS operation on NFS/RDMA mount points.
 
+### NFS Version 4 COMPOUND Requests
+
+#### Multiple DDP-eligible Data Items
+
+An NFS version 4 COMPOUND procedure can contain more than one
+operation that carries a DDP-eligible data item. An NFS version 4
+client provides XDR Position values in each Read chunk to
+determine which chunk is associated with which argument data item.
+However, NFS version 4 server and client implementations must agree
+on how to pair Write chunks with returned result data items.
+
+A "READ operation" refers to any NFS version 4 operation
+with a DDP-eligible result data item in the following lists.
+An NFS version 4 client applies the mechanism specified in
+{{Section 4.3.2 of I-D.ietf-nfsv4-rpcrdma-version-two}}
+to this class of operations as follows:
+
+* If an NFS version 4 client wishes all DDP-eligible items in an NFS
+  reply to be conveyed inline, it leaves the Write list empty.
+
+An NFS version 4 server acts as follows:
+
+* The first READ operation MUST use the first chunk in the Write list
+  in an NFS version 4 COMPOUND procedure. The next READ operation uses
+  the next Write chunk, and so on.
+* If an NFS version 4 client has provided a matching non-empty Write
+  chunk, then the corresponding READ operation MUST return its DDP-
+  eligible data item using that chunk.
+* If an NFS version 4 client has provided an empty matching Write
+  chunk, then the corresponding READ operation MUST return all of
+  its result data items inline.
+* If a READ operation returns a union arm which does not contain a
+  DDP-eligible result, and the NFS version 4 client has provided a
+  matching non-empty Write chunk, an NFS version 4 server MUST
+  return an empty Write chunk in that Write list position.
+* If there are more READ operations than Write chunks, then
+  remaining NFS Read operations in an NFS version 4 COMPOUND that
+  have no matching Write chunk MUST return their results inline.
+
+#### Chunk List Complexity {#chunk-list-cmplx}
+
+By default, the RPC-over-RDMA version 2 protocol limits the
+number of chunks or segments that may appear in Read or Write lists
+(see {{Section 5.2 of I-D.ietf-nfsv4-rpcrdma-version-two}}).
+
+These implementation limits are significant when Kerberos
+integrity or privacy is in use {{!RFC7861}}. GSS services increase the
+size of credential material in RPC headers, potentially requiring the
+more frequent use of less efficient Special Payload or
+Continued Payload messages.
+
+NFS version 4 clients follow the prescriptions listed below when
+constructing RPC-over-RDMA version 2 messages in the absence of an
+explicit transport property exchange that alters these limits.
+NFS version 4 servers MUST accept and process all such requests.
+
+* The Read list can contain either a Call chunk, no more than one
+  Read chunk, or both a Call chunk and one Read chunk.
+* The Write list can contain no more than one Write chunk.
+
+NFS version 4 clients wishing to send more complex chunk lists can
+use transport properties to bound the complexity of NFS version 4
+COMPOUNDs, limit the number of elements in scatter-gather operations,
+and avoid other sources of chunk overruns at the receiving peer.
+
+#### NFS Version 4 COMPOUND Example
+
+The following example shows a Write list with three Write chunks, A,
+B, and C. The NFS version 4 server consumes the provided Write
+chunks by writing the results of the designated operations in the
+compound request (READ and READLINK) back to each chunk.
+
+~~~
+  Write list:
+
+     A --> B --> C
+
+  NFS version 4 COMPOUND request:
+
+     PUTFH LOOKUP READ PUTFH LOOKUP READLINK PUTFH LOOKUP READ
+                   |                   |                   |
+                   v                   v                   v
+                   A                   B                   C
+~~~
+
+If the NFS version 4 client does not want the READLINK result
+returned via RDMA, it provides an empty Write chunk for buffer B to
+indicate that the READLINK result must be returned inline.
+
 ## Reply Size Estimation
 
 Within NFS version 4, there are certain variable-length result data
@@ -420,95 +509,6 @@ messages are sent without a credit update. In such cases:
 * If there is a transport disconnect and the Responder has provided
   no other response for a request, then only the NFS version 4 rules
   for handling retransmission apply.
-
-## NFS COMPOUND Requests
-
-### Multiple DDP-eligible Data Items
-
-An NFS version 4 COMPOUND procedure can contain more than one
-operation that carries a DDP-eligible data item. An NFS version 4
-client provides XDR Position values in each Read chunk to
-determine which chunk is associated with which argument data item.
-However, NFS version 4 server and client implementations must agree
-on how to pair Write chunks with returned result data items.
-
-A "READ operation" refers to any NFS version 4 operation
-with a DDP-eligible result data item in the following lists.
-An NFS version 4 client applies the mechanism specified in
-{{Section 4.3.2 of I-D.ietf-nfsv4-rpcrdma-version-two}}
-to this class of operations as follows:
-
-* If an NFS version 4 client wishes all DDP-eligible items in an NFS
-  reply to be conveyed inline, it leaves the Write list empty.
-
-An NFS version 4 server acts as follows:
-
-* The first READ operation MUST use the first chunk in the Write list
-  in an NFS version 4 COMPOUND procedure. The next READ operation uses
-  the next Write chunk, and so on.
-* If an NFS version 4 client has provided a matching non-empty Write
-  chunk, then the corresponding READ operation MUST return its DDP-
-  eligible data item using that chunk.
-* If an NFS version 4 client has provided an empty matching Write
-  chunk, then the corresponding READ operation MUST return all of
-  its result data items inline.
-* If a READ operation returns a union arm which does not contain a
-  DDP-eligible result, and the NFS version 4 client has provided a
-  matching non-empty Write chunk, an NFS version 4 server MUST
-  return an empty Write chunk in that Write list position.
-* If there are more READ operations than Write chunks, then
-  remaining NFS Read operations in an NFS version 4 COMPOUND that
-  have no matching Write chunk MUST return their results inline.
-
-### Chunk List Complexity {#chunk-list-cmplx}
-
-By default, the RPC-over-RDMA version 2 protocol limits the
-number of chunks or segments that may appear in Read or Write lists
-(see {{Section 5.2 of I-D.ietf-nfsv4-rpcrdma-version-two}}).
-
-These implementation limits are significant when Kerberos
-integrity or privacy is in use {{!RFC7861}}. GSS services increase the
-size of credential material in RPC headers, potentially requiring the
-more frequent use of less efficient Special Payload or
-Continued Payload messages.
-
-NFS version 4 clients follow the prescriptions listed below when
-constructing RPC-over-RDMA version 2 messages in the absence of an
-explicit transport property exchange that alters these limits.
-NFS version 4 servers MUST accept and process all such requests.
-
-* The Read list can contain either a Call chunk, no more than one
-  Read chunk, or both a Call chunk and one Read chunk.
-* The Write list can contain no more than one Write chunk.
-
-NFS version 4 clients wishing to send more complex chunk lists can
-use transport properties to bound the complexity of NFS version 4
-COMPOUNDs, limit the number of elements in scatter-gather operations,
-and avoid other sources of chunk overruns at the receiving peer.
-
-### NFS Version 4 COMPOUND Example
-
-The following example shows a Write list with three Write chunks, A,
-B, and C. The NFS version 4 server consumes the provided Write
-chunks by writing the results of the designated operations in the
-compound request (READ and READLINK) back to each chunk.
-
-~~~
-  Write list:
-
-     A --> B --> C
-
-  NFS version 4 COMPOUND request:
-
-     PUTFH LOOKUP READ PUTFH LOOKUP READLINK PUTFH LOOKUP READ
-                   |                   |                   |
-                   v                   v                   v
-                   A                   B                   C
-~~~
-
-If the NFS version 4 client does not want the READLINK result
-returned via RDMA, it provides an empty Write chunk for buffer B to
-indicate that the READLINK result must be returned inline.
 
 ## NFS Callback Requests
 
