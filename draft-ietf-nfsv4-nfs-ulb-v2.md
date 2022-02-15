@@ -100,8 +100,7 @@ communicating with clients using NFS version 2 or NFS version 3.
 
 ## DDP-Eligibility
 
-The following XDR data items in NFS versions 2 and 3 are DDP-
-eligible:
+The following XDR data items in NFS versions 2 and 3 are DDP-eligible:
 
 * The opaque file data argument in the NFS WRITE procedure
 * The pathname argument in the NFS SYMLINK procedure
@@ -334,8 +333,8 @@ An NFS version 4 server acts as follows:
   in an NFS version 4 COMPOUND procedure. The next READ operation uses
   the next Write chunk, and so on.
 * If an NFS version 4 client has provided a matching non-empty Write
-  chunk, then the corresponding READ operation MUST return its DDP-
-  eligible data item using that chunk.
+  chunk, then the corresponding READ operation MUST return its
+  DDP-eligible data item using that chunk.
 * If an NFS version 4 client has provided an empty matching Write
   chunk, then the corresponding READ operation MUST return all of
   its result data items inline.
