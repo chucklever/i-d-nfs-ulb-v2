@@ -100,7 +100,24 @@ communicating with clients using NFS version 2 or NFS version 3.
 
 ## DDP-Eligibility
 
-The following XDR data items in NFS versions 2 and 3 are DDP-eligible:
+Generally, storage protocols based on RDMA divide both
+read and write operations into two steps. This division enables
+the payload receiver to allocate the sink buffer for each I/O operation
+in advance of the network payload transfer.
+By allocating the sink buffer tactically,
+a good quality receiver implementation
+reduces the amount of data movement it must perform
+during and after the I/O operation.
+
+During an NFS WRITE that involves explicit RDMA,
+first the NFS client sends a request that indicates
+where the NFS server can find the payload buffer,
+then the NFS server pulls the WRITE payload from that buffer.
+Likewise, during an NFS READ that involves explicit RDMA,
+the NFS client provides the location of the destination buffer,
+then the NFS server pushes the READ payload to that buffer.
+
+Therefore, the following XDR data items in NFS versions 2 and 3 are DDP-eligible:
 
 * The opaque file data argument in the NFS WRITE procedure
 * The pathname argument in the NFS SYMLINK procedure
